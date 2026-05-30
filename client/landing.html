@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="CodeSentry — AI-powered pull request analysis that catches bugs, security holes, and performance issues before they reach production." />
+  <title>CodeSentry — Your code, reviewed. Instantly.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+      --charcoal: #1a1a2e;
+      --muted: #666;
+      --teal: #0abde3;
+      --purple: #6c5ce7;
+      --purple-light: #a29bfe;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--sans);
+      color: var(--charcoal);
+      background: #fff;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    
+    .mobile-menu {
+      display: none;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      height: 64px;
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(-10px);
+      animation: fadeNavIn 0.4s ease forwards;
+    }
+
+    @keyframes fadeNavIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    nav.scrolled {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--charcoal);
+    }
+
+    .nav-logo-orb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #f5cba7, #e6b0aa, #aab7b8, #5d6d7e);
+      box-shadow: 0 0 6px rgba(108, 92, 231, 0.3);
+    }
+
+    .nav-logo-text {
+      font-family: var(--sans);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--charcoal);
+    }
+
+    .nav-center {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-center a {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--charcoal);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: color 0.2s;
+    }
+
+    .nav-center a:hover {
+      color: var(--purple);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-login {
+      background: transparent;
+      border: 1px solid #ddd;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--charcoal);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-login:hover {
+      background: #f5f5f5;
+    }
+
+    .btn-signup {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .btn-signup:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      align-items: center;
+      justify-content: center;
+      color: var(--charcoal);
+    }
+
+    .nav-hamburger svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 15% 20%, rgba(169, 204, 164, 0.6) 0%, transparent 50%),
+        radial-gradient(ellipse at 75% 35%, rgba(232, 183, 164, 0.55) 0%, transparent 45%),
+        radial-gradient(ellipse at 60% 60%, rgba(220, 172, 155, 0.35) 0%, transparent 40%),
+        radial-gradient(ellipse at 20% 80%, rgba(138, 186, 183, 0.5) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(245, 240, 235, 1) 0%, rgba(250, 248, 245, 1) 100%);
+      z-index: 0;
+    }
+
+    
+    .orb-container {
+      position: absolute;
+      z-index: 1;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 580px;
+      height: 580px;
+      opacity: 0;
+      animation: orbIn 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards, orbFloat 6s ease-in-out 1.3s infinite;
+    }
+
+    @keyframes orbIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes orbFloat {
+
+      0%,
+      100% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+
+      50% {
+        transform: translate(-50%, calc(-50% - 18px)) rotate(6deg);
+      }
+    }
+
+    .orb {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 65% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 12%),
+        radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.4) 0%, transparent 40%),
+        radial-gradient(circle at 50% 100%, rgba(212, 175, 130, 0.5) 0%, transparent 20%),
+        radial-gradient(ellipse at 40% 40%, #e8c4a0 0%, #d4a880 15%, #c9a89a 25%, #b8c0c8 40%, #8e9eab 55%, #5c6b7a 70%, #3d4a58 85%, #2c3540 100%);
+      box-shadow:
+        0 0 100px rgba(212, 175, 130, 0.35),
+        0 0 180px rgba(90, 130, 180, 0.18),
+        0 0 60px rgba(169, 204, 164, 0.15),
+        0 30px 60px rgba(0, 0, 0, 0.22);
+    }
+
+    .orb::before {
+      content: '';
+      position: absolute;
+      top: 18%;
+      right: 22%;
+      width: 24px;
+      height: 24px;
+      background: white;
+      clip-path: polygon(50% 0%, 54% 40%, 100% 50%, 54% 60%, 50% 100%, 46% 60%, 0% 50%, 46% 40%);
+      filter: blur(0.5px);
+      z-index: 2;
+    }
+
+    
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 48px;
+      width: 100%;
+      text-align: center;
+      opacity: 0;
+      animation: heroContentIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+    }
+
+    @keyframes heroContentIn {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-headline {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 700;
+      font-size: clamp(56px, 8.5vw, 130px);
+      color: white;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      text-shadow:
+        0 2px 60px rgba(0, 0, 0, 0.18),
+        0 1px 12px rgba(0, 0, 0, 0.12);
+      margin-bottom: 32px;
+    }
+
+    .hero-sub {
+      font-family: var(--sans);
+      font-weight: 300;
+      font-size: 17px;
+      color: rgba(255, 255, 255, 0.82);
+      max-width: 460px;
+      line-height: 1.65;
+      text-shadow: 0 1px 12px rgba(0, 0, 0, 0.12);
+      margin: 0 auto 36px;
+    }
+
+    .hero-cta-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 52px;
+      min-width: 220px;
+      padding: 0 40px;
+      border-radius: 100px;
+      background: white;
+      color: var(--charcoal);
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-cta:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+    }
+
+    .hero-note {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 300;
+    }
+
+    
+    #quote {
+      padding: 120px 48px;
+      text-align: center;
+      background: #fff;
+    }
+
+    .quote-mark {
+      font-family: var(--serif);
+      font-size: 120px;
+      line-height: 0.5;
+      color: var(--teal);
+      opacity: 0.35;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .quote-text {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(24px, 4vw, 36px);
+      color: var(--charcoal);
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.45;
+    }
+
+    
+    #features {
+      padding: 100px 48px 120px;
+      background: #fafafa;
+    }
+
+    .section-heading {
+      font-family: var(--serif);
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 400;
+      color: var(--charcoal);
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 0, 0, 0.07);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      padding: 32px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    .feature-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.25s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .feature-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .feature-card h3 {
+      font-family: var(--sans);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    
+    #how-it-works {
+      padding: 120px 48px;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+    }
+
+    .how-heading {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 400;
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .steps-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      padding: 0 24px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .step.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .steps-row::before {
+      content: '';
+      position: absolute;
+      top: 32px;
+      left: calc(16.66% + 32px);
+      right: calc(16.66% + 32px);
+      height: 1px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    }
+
+    .step-number {
+      font-family: var(--sans);
+      font-size: 64px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 16px;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .step:nth-child(1) .step-number {
+      background-image: linear-gradient(135deg, #0abde3, #3498db);
+    }
+
+    .step:nth-child(2) .step-number {
+      background-image: linear-gradient(135deg, #3498db, #6c5ce7);
+    }
+
+    .step:nth-child(3) .step-number {
+      background-image: linear-gradient(135deg, #6c5ce7, #e84393);
+    }
+
+    .step h3 {
+      font-family: var(--sans);
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      font-family: var(--sans);
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+    }
+
+    
+    #pricing {
+      padding: 120px 48px;
+      background: #fff;
+    }
+
+    .pricing-grid {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: 28px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .pricing-card {
+      flex: 1;
+      max-width: 320px;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 16px;
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: scale(0.96);
+    }
+
+    .pricing-card.visible {
+      opacity: 1;
+      transform: scale(1);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .pricing-card:hover {
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+
+    .pricing-card.featured {
+      border: 2px solid var(--purple);
+      transform: scale(1.04);
+      position: relative;
+      box-shadow: 0 8px 40px rgba(108, 92, 231, 0.12);
+    }
+
+    .pricing-card.featured.visible {
+      transform: scale(1.04);
+    }
+
+    .pricing-badge {
+      position: absolute;
+      top: -12px;
+      right: 20px;
+      background: var(--purple);
+      color: white;
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 100px;
+      letter-spacing: 0.03em;
+    }
+
+    .pricing-plan {
+      font-family: var(--sans);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+
+    .pricing-price {
+      font-family: var(--sans);
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--charcoal);
+      margin-bottom: 4px;
+      line-height: 1;
+    }
+
+    .pricing-price span {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .pricing-desc {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .pricing-divider {
+      height: 1px;
+      background: #f0f0f0;
+      margin-bottom: 24px;
+    }
+
+    .pricing-features {
+      list-style: none;
+      flex: 1;
+      margin-bottom: 28px;
+    }
+
+    .pricing-features li {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--charcoal);
+      padding: 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pricing-features li::before {
+      content: '';
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230abde3' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    .btn-pricing {
+      display: block;
+      width: 100%;
+      height: 48px;
+      border-radius: 10px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      line-height: 48px;
+      transition: opacity 0.2s, transform 0.2s;
+      border: none;
+    }
+
+    .btn-pricing:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn-pricing.ghost {
+      background: transparent;
+      border: 1px solid #ddd;
+      color: var(--charcoal);
+    }
+
+    .btn-pricing.ghost:hover {
+      background: #f5f5f5;
+    }
+
+    .btn-pricing.purple {
+      background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+      color: white;
+    }
+
+    .btn-pricing.dark {
+      background: #1a1a2e;
+      color: white;
+    }
+
+    
+    footer {
+      background: #0f0f0f;
+      padding: 80px 48px 40px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      max-width: 1100px;
+      margin: 0 auto 60px;
+    }
+
+    .footer-brand-desc {
+      font-family: var(--sans);
+      font-size: 13px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.4);
+      margin: 12px 0 16px;
+    }
+
+    .footer-copyright {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.25);
+    }
+
+    .footer-col-title {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.3);
+      margin-bottom: 20px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-col a {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 24px;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.3);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    
+    @media (max-width: 768px) {
+      nav {
+        padding: 0 20px;
+      }
+
+      .nav-center {
+        display: none;
+      }
+
+      .nav-right .btn-login,
+      .nav-right .btn-signup {
+        display: none;
+      }
+
+      .nav-hamburger {
+        display: flex;
+      }
+
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 64px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(12px);
+        z-index: 99;
+        flex-direction: column;
+        padding: 24px;
+        gap: 4px;
+      }
+
+      .mobile-menu.open {
+        display: flex;
+      }
+
+      .mobile-menu a {
+        font-family: var(--sans);
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--charcoal);
+        text-decoration: none;
+        padding: 14px 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .mobile-menu .mobile-cta {
+        margin-top: 16px;
+        display: flex;
+        gap: 12px;
+      }
+
+      .mobile-menu .mobile-cta a {
+        flex: 1;
+        text-align: center;
+        padding: 12px 0;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .mobile-menu .mobile-cta .btn-login {
+        display: block;
+        border: 1px solid #ddd;
+      }
+
+      .mobile-menu .mobile-cta .btn-signup {
+        display: block;
+        color: white;
+      }
+
+      
+      .orb-container {
+        width: 340px;
+        height: 340px;
+        right: -80px;
+        top: 40%;
+      }
+
+      .hero-content {
+        padding: 0 24px;
+        max-width: 100%;
+      }
+
+      .hero-headline {
+        font-size: clamp(44px, 13vw, 80px);
+      }
+
+      .hero-sub {
+        font-size: 15px;
+      }
+
+      .hero-cta-area {
+        align-items: center;
+      }
+
+      #quote {
+        padding: 80px 24px;
+      }
+
+      #features {
+        padding: 80px 20px;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #how-it-works {
+        padding: 80px 20px;
+      }
+
+      .steps-row {
+        flex-direction: column;
+        gap: 48px;
+      }
+
+      .steps-row::before {
+        display: none;
+      }
+
+      #pricing {
+        padding: 80px 20px;
+      }
+
+      .pricing-grid {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .pricing-card {
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .pricing-card.featured {
+        transform: scale(1);
+      }
+
+      .pricing-card.featured.visible {
+        transform: scale(1);
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+
+      footer {
+        padding: 60px 20px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  
+  <nav id="navbar" aria-label="Main navigation">
+    <a href="#hero" class="nav-left">
+      <div class="nav-logo-orb"></div>
+      <span class="nav-logo-text">CodeSentry</span>
+    </a>
+    <ul class="nav-center">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How it Works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#footer">Changelog</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="auth.html" class="btn-login">Log in</a>
+      <a href="auth.html" class="btn-signup">Sign up free</a>
+      <button class="nav-hamburger" id="hamburger-btn" aria-label="Toggle menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#features">Features</a>
+    <a href="#how-it-works">How it Works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#footer">Changelog</a>
+    <div class="mobile-cta">
+      <a href="auth.html" class="btn-login">Log in</a>
+      <a href="auth.html" class="btn-signup">Sign up free</a>
+    </div>
+  </div>
+
+  <main>
+    
+    <section id="hero" aria-label="Hero">
+      <div class="hero-bg"></div>
+
+      
+      <div class="orb-container">
+        <div class="orb"></div>
+      </div>
+
+      
+      <div class="hero-content">
+        <h1 class="hero-headline">Your code, reviewed.<br>Instantly.</h1>
+        <p class="hero-sub">AI-powered pull request analysis that catches bugs, security holes, and performance issues
+          before they reach production.</p>
+        <div class="hero-cta-area">
+          <a href="auth.html" class="btn-cta">Connect GitHub Free</a>
+          <span class="hero-note">No credit card required · Setup in 60 seconds</span>
+        </div>
+      </div>
+    </section>
+
+    
+    <section id="quote" aria-label="Testimonial quote">
+      <div class="reveal">
+        <span class="quote-mark">&ldquo;</span>
+        <p class="quote-text">The best code review you&rsquo;ve never had to ask for.</p>
+      </div>
+    </section>
+
+    
+    <section id="features" aria-label="Features">
+      <h2 class="section-heading reveal">Everything your team needs</h2>
+      <div class="features-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background:rgba(255,107,107,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <h3>Security Scanning</h3>
+          <p>Detects SQL injection, XSS, hardcoded secrets, and OWASP Top 10 vulnerabilities in every pull request.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background:rgba(255,159,67,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          </div>
+          <h3>Bug Detection</h3>
+          <p>Catches null dereferences, race conditions, unhandled promise rejections, and logic errors before merge.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background:rgba(249,202,36,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#d4ac0d" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </svg>
+          </div>
+          <h3>Performance Analysis</h3>
+          <p>Flags N+1 queries, O(n²) loops, memory leaks, and blocking I/O in your hot paths.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background:rgba(72,219,251,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0abde3" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M16 18l6-6-6-6" />
+              <path d="M8 6l-6 6 6 6" />
+            </svg>
+          </div>
+          <h3>Code Quality</h3>
+          <p>Reports dead code, excessive complexity, misleading names, and architectural boundary violations.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background:rgba(29,209,161,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#10ac84" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path
+                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+            </svg>
+          </div>
+          <h3>GitHub &amp; GitLab Native</h3>
+          <p>Inline PR comments. Review summaries. Works exactly where your team already works.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background:rgba(162,155,254,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+          </div>
+          <h3>Powered by Claude Opus 4.6</h3>
+          <p>Extended thinking mode. Reasons about your code the way a Staff Engineer would — not a linter.</p>
+        </div>
+
+      </div>
+    </section>
+
+    
+    <section id="how-it-works" aria-label="How it works">
+      <h2 class="how-heading reveal">How it works</h2>
+      <div class="steps-row">
+        <div class="step">
+          <div class="step-number">01</div>
+          <h3>Connect your repo</h3>
+          <p>Install the CodeSentry GitHub or GitLab app in one click.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">02</div>
+          <h3>Open a pull request</h3>
+          <p>Push your branch and open a PR as you normally would.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">03</div>
+          <h3>Get instant AI review</h3>
+          <p>CodeSentry reviews every file and posts inline comments in seconds.</p>
+        </div>
+      </div>
+    </section>
+
+    
+    <section id="pricing" aria-label="Pricing">
+      <h2 class="section-heading reveal">Simple pricing</h2>
+      <div class="pricing-grid">
+
+        <div class="pricing-card">
+          <div class="pricing-plan">Free</div>
+          <div class="pricing-price">$0<span>/mo</span></div>
+          <div class="pricing-desc">For solo developers</div>
+          <div class="pricing-divider"></div>
+          <ul class="pricing-features">
+            <li>50 reviews/month</li>
+            <li>GitHub integration</li>
+            <li>Bug detection</li>
+            <li>Security scan</li>
+            <li>Community support</li>
+          </ul>
+          <a href="auth.html" class="btn-pricing ghost">Get started</a>
+        </div>
+
+        <div class="pricing-card featured">
+          <span class="pricing-badge">Most popular</span>
+          <div class="pricing-plan">Pro</div>
+          <div class="pricing-price">$29<span>/mo</span></div>
+          <div class="pricing-desc">For growing teams</div>
+          <div class="pricing-divider"></div>
+          <ul class="pricing-features">
+            <li>Unlimited reviews</li>
+            <li>GitHub + GitLab</li>
+            <li>All 6 categories</li>
+            <li>Slack notifications</li>
+            <li>Priority support</li>
+            <li>Team dashboard</li>
+          </ul>
+          <a href="auth.html" class="btn-pricing purple">Start free trial</a>
+        </div>
+
+        <div class="pricing-card">
+          <div class="pricing-plan">Enterprise</div>
+          <div class="pricing-price">Custom</div>
+          <div class="pricing-desc">For large organisations</div>
+          <div class="pricing-divider"></div>
+          <ul class="pricing-features">
+            <li>Everything in Pro</li>
+            <li>SSO / SAML</li>
+            <li>Custom rules engine</li>
+            <li>SLA</li>
+            <li>Dedicated CSM</li>
+            <li>On-prem option</li>
+          </ul>
+          <a href="auth.html" class="btn-pricing dark">Contact sales</a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  
+  <footer id="footer" aria-label="Footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+          <div class="nav-logo-orb"></div>
+          <span style="font-family:var(--sans);font-size:16px;font-weight:600;color:white;">CodeSentry</span>
+        </div>
+        <p class="footer-brand-desc">AI-powered code review that catches what humans miss.</p>
+        <p class="footer-copyright">&copy; 2026 CodeSentry. All rights reserved.</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Product</div>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#">Changelog</a></li>
+          <li><a href="#">Roadmap</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Developers</div>
+        <ul>
+          <li><a href="#">Docs</a></li>
+          <li><a href="#">API Reference</a></li>
+          <li><a href="#">GitHub App</a></li>
+          <li><a href="#">Status</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Company</div>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    const heroSection = document.getElementById('hero');
+    const navObserver = new IntersectionObserver(([entry]) => {
+      navbar.classList.toggle('scrolled', !entry.isIntersecting);
+    }, { threshold: 0.1 });
+    navObserver.observe(heroSection);
+
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    hamburgerBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+      const isOpen = mobileMenu.classList.contains('open');
+      hamburgerBtn.innerHTML = isOpen
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
+    });
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburgerBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
+      });
+    });
+
+    const revealElements = document.querySelectorAll('.reveal, .feature-card, .step, .pricing-card');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const parent = entry.target.parentElement;
+          const siblings = Array.from(parent.children).filter(c =>
+            c.classList.contains('feature-card') || c.classList.contains('step') || c.classList.contains('pricing-card')
+          );
+          const delay = siblings.indexOf(entry.target) >= 0 ? siblings.indexOf(entry.target) * 80 : 0;
+          setTimeout(() => entry.target.classList.add('visible'), delay);
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealElements.forEach(el => revealObserver.observe(el));
+  </script>
+</body>
+
+</html>
