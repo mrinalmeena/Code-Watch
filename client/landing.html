@@ -24,11 +24,80 @@
     :root {
       --serif: 'Playfair Display', Georgia, serif;
       --sans: 'DM Sans', system-ui, -apple-system, sans-serif;
-      --charcoal: #1a1a2e;
-      --muted: #666;
-      --teal: #0abde3;
+
+      --bg-base: #f0ede6;
+      --bg-gradient:
+        radial-gradient(ellipse 110% 80% at 0% 0%,
+          rgba(180, 210, 185, 0.55) 0%, transparent 55%),
+        radial-gradient(ellipse 90% 70% at 100% 100%,
+          rgba(210, 175, 155, 0.45) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 60% at 50% 40%,
+          rgba(170, 195, 215, 0.25) 0%, transparent 60%),
+        #ede8e0;
+
+      --surface: rgba(255, 252, 248, 0.72);
+      --surface-border: rgba(160, 150, 130, 0.18);
+      --surface-hover: rgba(255, 252, 248, 0.9);
+
+      --accent: #6c5ce7;
+      --accent-light: #a594f9;
+      --accent-grad: linear-gradient(135deg, #6c5ce7, #a594f9);
+      --accent-glow: rgba(108, 92, 231, 0.22);
+      --accent-subtle: rgba(108, 92, 231, 0.08);
+
+      --text-primary: #1a1814;
+      --text-secondary: rgba(26, 24, 20, 0.6);
+      --text-muted: rgba(26, 24, 20, 0.38);
+      --text-on-accent: #ffffff;
+
+      --input-bg: rgba(255, 255, 255, 0.6);
+      --input-border: rgba(26, 24, 20, 0.14);
+      --input-focus: rgba(108, 92, 231, 0.4);
+      --input-text: #1a1814;
+      --placeholder: rgba(26, 24, 20, 0.35);
+
+      --red: #e74c3c;
+      --red-subtle: rgba(231, 76, 60, 0.09);
+      --red-border: rgba(231, 76, 60, 0.2);
+      --amber: #e67e22;
+      --amber-subtle: rgba(230, 126, 34, 0.09);
+      --amber-border: rgba(230, 126, 34, 0.2);
+      --yellow: #d4ac0d;
+      --yellow-subtle: rgba(212, 172, 13, 0.09);
+      --yellow-border: rgba(212, 172, 13, 0.2);
+      --cyan: #0abde3;
+      --cyan-subtle: rgba(10, 189, 227, 0.09);
+      --cyan-border: rgba(10, 189, 227, 0.2);
+      --green: #10ac84;
+      --green-subtle: rgba(16, 172, 132, 0.09);
+      --green-border: rgba(16, 172, 132, 0.2);
       --purple: #6c5ce7;
-      --purple-light: #a29bfe;
+      --purple-subtle: rgba(108, 92, 231, 0.09);
+      --purple-border: rgba(108, 92, 231, 0.2);
+
+      --blue: #3498db;
+      --pink: #e84393;
+
+      --logo-g1: #f5cba7;
+      --logo-g2: #e6b0aa;
+      --logo-g3: #aab7b8;
+      --logo-g4: #5d6d7e;
+
+      --orb-g1: #e8c4a0;
+      --orb-g2: #d4a880;
+      --orb-g3: #c9a89a;
+      --orb-g4: #b8c0c8;
+      --orb-g5: #8e9eab;
+      --orb-g6: #5c6b7a;
+      --orb-g7: #3d4a58;
+      --orb-g8: #2c3540;
+
+      --card-bg: rgba(255, 252, 248, 0.65);
+      --card-border: rgba(160, 150, 130, 0.16);
+      --card-shadow: 0 4px 24px rgba(26, 24, 20, 0.07);
+
+      --sidebar-bg: rgba(245, 240, 232, 0.88);
+      --sidebar-border: rgba(160, 150, 130, 0.15);
     }
 
     html {
@@ -37,13 +106,13 @@
 
     body {
       font-family: var(--sans);
-      color: var(--charcoal);
-      background: #fff;
+      color: var(--text-primary);
+      background: var(--bg-gradient);
+      min-height: 100vh;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
-    
     .mobile-menu {
       display: none;
     }
@@ -73,10 +142,10 @@
     }
 
     nav.scrolled {
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 252, 248, 0.92);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 1px 8px rgba(26, 24, 20, 0.06);
     }
 
     .nav-left {
@@ -84,22 +153,22 @@
       align-items: center;
       gap: 10px;
       text-decoration: none;
-      color: var(--charcoal);
+      color: var(--text-primary);
     }
 
     .nav-logo-orb {
       width: 18px;
       height: 18px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #f5cba7, #e6b0aa, #aab7b8, #5d6d7e);
-      box-shadow: 0 0 6px rgba(108, 92, 231, 0.3);
+      background: radial-gradient(circle at 35% 35%, var(--logo-g1), var(--logo-g2), var(--logo-g3), var(--logo-g4));
+      box-shadow: 0 0 6px var(--accent-glow);
     }
 
     .nav-logo-text {
       font-family: var(--sans);
       font-size: 18px;
       font-weight: 600;
-      color: var(--charcoal);
+      color: var(--text-primary);
     }
 
     .nav-center {
@@ -113,14 +182,14 @@
       font-family: var(--sans);
       font-size: 14px;
       font-weight: 400;
-      color: var(--charcoal);
+      color: var(--text-primary);
       text-decoration: none;
       letter-spacing: 0.01em;
       transition: color 0.2s;
     }
 
     .nav-center a:hover {
-      color: var(--purple);
+      color: var(--accent);
     }
 
     .nav-right {
@@ -131,25 +200,25 @@
 
     .btn-login {
       background: transparent;
-      border: 1px solid #ddd;
+      border: 1px solid var(--input-border);
       padding: 8px 20px;
       border-radius: 8px;
       font-family: var(--sans);
       font-size: 14px;
       font-weight: 400;
-      color: var(--charcoal);
+      color: var(--text-primary);
       cursor: pointer;
       text-decoration: none;
       transition: background 0.2s;
     }
 
     .btn-login:hover {
-      background: #f5f5f5;
+      background: var(--surface-hover);
     }
 
     .btn-signup {
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
-      color: white;
+      background: var(--accent-grad);
+      color: var(--text-on-accent);
       padding: 8px 20px;
       border-radius: 8px;
       font-family: var(--sans);
@@ -175,7 +244,7 @@
       height: 36px;
       align-items: center;
       justify-content: center;
-      color: var(--charcoal);
+      color: var(--text-primary);
     }
 
     .nav-hamburger svg {
@@ -183,7 +252,6 @@
       height: 24px;
     }
 
-    
     #hero {
       position: relative;
       min-height: 100vh;
@@ -205,12 +273,11 @@
       z-index: 0;
     }
 
-    
     .orb-container {
       position: absolute;
       z-index: 1;
       left: 50%;
-      top: 50%;
+      top: 58%;
       transform: translate(-50%, -50%);
       width: 580px;
       height: 580px;
@@ -225,7 +292,6 @@
     }
 
     @keyframes orbFloat {
-
       0%,
       100% {
         transform: translate(-50%, -50%) rotate(0deg);
@@ -244,7 +310,7 @@
         radial-gradient(circle at 65% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 12%),
         radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.4) 0%, transparent 40%),
         radial-gradient(circle at 50% 100%, rgba(212, 175, 130, 0.5) 0%, transparent 20%),
-        radial-gradient(ellipse at 40% 40%, #e8c4a0 0%, #d4a880 15%, #c9a89a 25%, #b8c0c8 40%, #8e9eab 55%, #5c6b7a 70%, #3d4a58 85%, #2c3540 100%);
+        radial-gradient(ellipse at 40% 40%, var(--orb-g1) 0%, var(--orb-g2) 15%, var(--orb-g3) 25%, var(--orb-g4) 40%, var(--orb-g5) 55%, var(--orb-g6) 70%, var(--orb-g7) 85%, var(--orb-g8) 100%);
       box-shadow:
         0 0 100px rgba(212, 175, 130, 0.35),
         0 0 180px rgba(90, 130, 180, 0.18),
@@ -265,26 +331,29 @@
       z-index: 2;
     }
 
-    
     .hero-content {
-      position: relative;
+      position: absolute;
       z-index: 2;
-      padding: 0 48px;
-      width: 100%;
+      top: 44%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 1100px;
       text-align: center;
       opacity: 0;
       animation: heroContentIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+      pointer-events: none;
     }
 
     @keyframes heroContentIn {
       from {
         opacity: 0;
-        transform: translateY(24px);
+        transform: translate(-50%, calc(-50% + 24px));
       }
 
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate(-50%, -50%);
       }
     }
 
@@ -300,6 +369,7 @@
         0 2px 60px rgba(0, 0, 0, 0.18),
         0 1px 12px rgba(0, 0, 0, 0.12);
       margin-bottom: 32px;
+      margin-left: 0;
     }
 
     .hero-sub {
@@ -311,6 +381,8 @@
       line-height: 1.65;
       text-shadow: 0 1px 12px rgba(0, 0, 0, 0.12);
       margin: 0 auto 36px;
+      text-align: center;
+      width: 100%;
     }
 
     .hero-cta-area {
@@ -318,6 +390,7 @@
       flex-direction: column;
       align-items: center;
       gap: 14px;
+      pointer-events: auto;
     }
 
     .btn-cta {
@@ -329,7 +402,7 @@
       padding: 0 40px;
       border-radius: 100px;
       background: white;
-      color: var(--charcoal);
+      color: var(--text-primary);
       font-family: var(--sans);
       font-size: 15px;
       font-weight: 600;
@@ -352,18 +425,16 @@
       font-weight: 300;
     }
 
-    
     #quote {
       padding: 120px 48px;
       text-align: center;
-      background: #fff;
     }
 
     .quote-mark {
       font-family: var(--serif);
       font-size: 120px;
       line-height: 0.5;
-      color: var(--teal);
+      color: var(--cyan);
       opacity: 0.35;
       margin-bottom: 8px;
       display: block;
@@ -373,23 +444,21 @@
       font-family: var(--serif);
       font-style: italic;
       font-size: clamp(24px, 4vw, 36px);
-      color: var(--charcoal);
+      color: var(--text-primary);
       max-width: 700px;
       margin: 0 auto;
       line-height: 1.45;
     }
 
-    
     #features {
       padding: 100px 48px 120px;
-      background: #fafafa;
     }
 
     .section-heading {
       font-family: var(--serif);
       font-size: clamp(32px, 4vw, 48px);
       font-weight: 400;
-      color: var(--charcoal);
+      color: var(--text-primary);
       text-align: center;
       margin-bottom: 64px;
     }
@@ -403,11 +472,12 @@
     }
 
     .feature-card {
-      background: #fff;
+      background: var(--card-bg);
       border-radius: 16px;
-      border: 1px solid rgba(0, 0, 0, 0.07);
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--card-shadow);
       padding: 32px;
+      backdrop-filter: blur(10px);
       transition: transform 0.25s ease, box-shadow 0.25s ease;
       opacity: 0;
       transform: translateY(24px);
@@ -421,7 +491,7 @@
 
     .feature-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 32px rgba(26, 24, 20, 0.1);
     }
 
     .feature-icon {
@@ -443,7 +513,7 @@
       font-family: var(--sans);
       font-size: 18px;
       font-weight: 600;
-      color: var(--charcoal);
+      color: var(--text-primary);
       margin-bottom: 8px;
     }
 
@@ -451,15 +521,15 @@
       font-family: var(--sans);
       font-size: 14px;
       font-weight: 400;
-      color: var(--muted);
+      color: var(--text-secondary);
       line-height: 1.7;
     }
 
-    
     #how-it-works {
       padding: 120px 48px;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      color: white;
+      background: var(--surface);
+      border-top: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--surface-border);
     }
 
     .how-heading {
@@ -469,6 +539,7 @@
       font-weight: 400;
       text-align: center;
       margin-bottom: 80px;
+      color: var(--text-primary);
     }
 
     .steps-row {
@@ -503,7 +574,7 @@
       left: calc(16.66% + 32px);
       right: calc(16.66% + 32px);
       height: 1px;
-      border-top: 1px dashed rgba(255, 255, 255, 0.2);
+      border-top: 1px dashed var(--text-muted);
     }
 
     .step-number {
@@ -518,15 +589,15 @@
     }
 
     .step:nth-child(1) .step-number {
-      background-image: linear-gradient(135deg, #0abde3, #3498db);
+      background-image: linear-gradient(135deg, var(--cyan), var(--blue));
     }
 
     .step:nth-child(2) .step-number {
-      background-image: linear-gradient(135deg, #3498db, #6c5ce7);
+      background-image: linear-gradient(135deg, var(--blue), var(--accent));
     }
 
     .step:nth-child(3) .step-number {
-      background-image: linear-gradient(135deg, #6c5ce7, #e84393);
+      background-image: linear-gradient(135deg, var(--accent), var(--pink));
     }
 
     .step h3 {
@@ -534,19 +605,18 @@
       font-size: 18px;
       font-weight: 600;
       margin-bottom: 8px;
+      color: var(--text-primary);
     }
 
     .step p {
       font-family: var(--sans);
       font-size: 14px;
-      color: rgba(255, 255, 255, 0.7);
+      color: var(--text-secondary);
       line-height: 1.6;
     }
 
-    
     #pricing {
       padding: 120px 48px;
-      background: #fff;
     }
 
     .pricing-grid {
@@ -561,12 +631,13 @@
     .pricing-card {
       flex: 1;
       max-width: 320px;
-      background: #fff;
-      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 16px;
       padding: 36px 28px;
       display: flex;
       flex-direction: column;
+      backdrop-filter: blur(10px);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       opacity: 0;
       transform: scale(0.96);
@@ -579,14 +650,14 @@
     }
 
     .pricing-card:hover {
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 8px 32px rgba(26, 24, 20, 0.08);
     }
 
     .pricing-card.featured {
-      border: 2px solid var(--purple);
+      border: 2px solid var(--accent);
       transform: scale(1.04);
       position: relative;
-      box-shadow: 0 8px 40px rgba(108, 92, 231, 0.12);
+      box-shadow: 0 8px 40px var(--accent-glow);
     }
 
     .pricing-card.featured.visible {
@@ -597,8 +668,8 @@
       position: absolute;
       top: -12px;
       right: 20px;
-      background: var(--purple);
-      color: white;
+      background: var(--accent);
+      color: var(--text-on-accent);
       font-family: var(--sans);
       font-size: 11px;
       font-weight: 700;
@@ -611,7 +682,7 @@
       font-family: var(--sans);
       font-size: 18px;
       font-weight: 700;
-      color: var(--charcoal);
+      color: var(--text-primary);
       margin-bottom: 8px;
     }
 
@@ -619,7 +690,7 @@
       font-family: var(--sans);
       font-size: 42px;
       font-weight: 700;
-      color: var(--charcoal);
+      color: var(--text-primary);
       margin-bottom: 4px;
       line-height: 1;
     }
@@ -627,19 +698,19 @@
     .pricing-price span {
       font-size: 16px;
       font-weight: 400;
-      color: var(--muted);
+      color: var(--text-secondary);
     }
 
     .pricing-desc {
       font-family: var(--sans);
       font-size: 13px;
-      color: var(--muted);
+      color: var(--text-secondary);
       margin-bottom: 24px;
     }
 
     .pricing-divider {
       height: 1px;
-      background: #f0f0f0;
+      background: var(--card-border);
       margin-bottom: 24px;
     }
 
@@ -652,7 +723,7 @@
     .pricing-features li {
       font-family: var(--sans);
       font-size: 13px;
-      color: var(--charcoal);
+      color: var(--text-primary);
       padding: 6px 0;
       display: flex;
       align-items: center;
@@ -692,29 +763,29 @@
 
     .btn-pricing.ghost {
       background: transparent;
-      border: 1px solid #ddd;
-      color: var(--charcoal);
+      border: 1px solid var(--input-border);
+      color: var(--text-primary);
     }
 
     .btn-pricing.ghost:hover {
-      background: #f5f5f5;
+      background: var(--surface-hover);
     }
 
     .btn-pricing.purple {
-      background: linear-gradient(135deg, #6c5ce7, #a29bfe);
-      color: white;
+      background: var(--accent-grad);
+      color: var(--text-on-accent);
     }
 
     .btn-pricing.dark {
-      background: #1a1a2e;
-      color: white;
+      background: var(--text-primary);
+      color: var(--text-on-accent);
     }
 
-    
     footer {
-      background: #0f0f0f;
+      background: var(--sidebar-bg);
+      border-top: 1px solid var(--sidebar-border);
       padding: 80px 48px 40px;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--text-secondary);
     }
 
     .footer-grid {
@@ -729,13 +800,13 @@
       font-family: var(--sans);
       font-size: 13px;
       line-height: 1.7;
-      color: rgba(255, 255, 255, 0.4);
+      color: var(--text-secondary);
       margin: 12px 0 16px;
     }
 
     .footer-copyright {
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.25);
+      color: var(--text-muted);
     }
 
     .footer-col-title {
@@ -744,7 +815,7 @@
       font-weight: 700;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.3);
+      color: var(--text-muted);
       margin-bottom: 20px;
     }
 
@@ -759,27 +830,26 @@
     .footer-col a {
       font-family: var(--sans);
       font-size: 13px;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--text-secondary);
       text-decoration: none;
       transition: color 0.2s;
     }
 
     .footer-col a:hover {
-      color: white;
+      color: var(--accent);
     }
 
     .footer-bottom {
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid var(--sidebar-border);
       padding-top: 24px;
       text-align: center;
       font-family: 'Courier New', monospace;
       font-size: 11px;
-      color: rgba(255, 255, 255, 0.3);
+      color: var(--text-muted);
       max-width: 1100px;
       margin: 0 auto;
     }
 
-    
     .reveal {
       opacity: 0;
       transform: translateY(24px);
@@ -791,7 +861,6 @@
       transform: translateY(0);
     }
 
-    
     @media (max-width: 768px) {
       nav {
         padding: 0 20px;
@@ -817,7 +886,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(255, 255, 255, 0.98);
+        background: rgba(255, 252, 248, 0.98);
         backdrop-filter: blur(12px);
         z-index: 99;
         flex-direction: column;
@@ -833,10 +902,10 @@
         font-family: var(--sans);
         font-size: 16px;
         font-weight: 500;
-        color: var(--charcoal);
+        color: var(--text-primary);
         text-decoration: none;
         padding: 14px 0;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid var(--card-border);
       }
 
       .mobile-menu .mobile-cta {
@@ -857,25 +926,24 @@
 
       .mobile-menu .mobile-cta .btn-login {
         display: block;
-        border: 1px solid #ddd;
+        border: 1px solid var(--input-border);
       }
 
       .mobile-menu .mobile-cta .btn-signup {
         display: block;
-        color: white;
+        color: var(--text-on-accent);
       }
 
-      
       .orb-container {
         width: 340px;
         height: 340px;
-        right: -80px;
-        top: 40%;
+        top: 58%;
       }
 
       .hero-content {
         padding: 0 24px;
         max-width: 100%;
+        width: 95%;
       }
 
       .hero-headline {
@@ -957,7 +1025,6 @@
 
 <body>
 
-  
   <nav id="navbar" aria-label="Main navigation">
     <a href="#hero" class="nav-left">
       <div class="nav-logo-orb"></div>
@@ -983,7 +1050,6 @@
     </div>
   </nav>
 
-  
   <div class="mobile-menu" id="mobile-menu">
     <a href="#features">Features</a>
     <a href="#how-it-works">How it Works</a>
@@ -996,16 +1062,13 @@
   </div>
 
   <main>
-    
     <section id="hero" aria-label="Hero">
       <div class="hero-bg"></div>
 
-      
       <div class="orb-container">
         <div class="orb"></div>
       </div>
 
-      
       <div class="hero-content">
         <h1 class="hero-headline">Your code, reviewed.<br>Instantly.</h1>
         <p class="hero-sub">AI-powered pull request analysis that catches bugs, security holes, and performance issues
@@ -1017,7 +1080,6 @@
       </div>
     </section>
 
-    
     <section id="quote" aria-label="Testimonial quote">
       <div class="reveal">
         <span class="quote-mark">&ldquo;</span>
@@ -1025,14 +1087,13 @@
       </div>
     </section>
 
-    
     <section id="features" aria-label="Features">
       <h2 class="section-heading reveal">Everything your team needs</h2>
       <div class="features-grid">
 
         <div class="feature-card">
-          <div class="feature-icon" style="background:rgba(255,107,107,0.12);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2" stroke-linecap="round"
+          <div class="feature-icon" style="background:var(--red-subtle);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
@@ -1042,8 +1103,8 @@
         </div>
 
         <div class="feature-card">
-          <div class="feature-icon" style="background:rgba(255,159,67,0.12);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2" stroke-linecap="round"
+          <div class="feature-icon" style="background:var(--amber-subtle);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round">
               <circle cx="12" cy="12" r="10" />
               <line x1="12" y1="8" x2="12" y2="12" />
@@ -1056,8 +1117,8 @@
         </div>
 
         <div class="feature-card">
-          <div class="feature-icon" style="background:rgba(249,202,36,0.12);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#d4ac0d" stroke-width="2" stroke-linecap="round"
+          <div class="feature-icon" style="background:var(--yellow-subtle);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round">
               <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
             </svg>
@@ -1067,8 +1128,8 @@
         </div>
 
         <div class="feature-card">
-          <div class="feature-icon" style="background:rgba(72,219,251,0.12);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#0abde3" stroke-width="2" stroke-linecap="round"
+          <div class="feature-icon" style="background:var(--cyan-subtle);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round">
               <path d="M16 18l6-6-6-6" />
               <path d="M8 6l-6 6 6 6" />
@@ -1079,8 +1140,8 @@
         </div>
 
         <div class="feature-card">
-          <div class="feature-icon" style="background:rgba(29,209,161,0.12);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#10ac84" stroke-width="2" stroke-linecap="round"
+          <div class="feature-icon" style="background:var(--green-subtle);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round">
               <path
                 d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
@@ -1091,8 +1152,8 @@
         </div>
 
         <div class="feature-card">
-          <div class="feature-icon" style="background:rgba(162,155,254,0.12);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2" stroke-linecap="round"
+          <div class="feature-icon" style="background:var(--purple-subtle);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
@@ -1104,7 +1165,6 @@
       </div>
     </section>
 
-    
     <section id="how-it-works" aria-label="How it works">
       <h2 class="how-heading reveal">How it works</h2>
       <div class="steps-row">
@@ -1126,7 +1186,6 @@
       </div>
     </section>
 
-    
     <section id="pricing" aria-label="Pricing">
       <h2 class="section-heading reveal">Simple pricing</h2>
       <div class="pricing-grid">
@@ -1183,13 +1242,12 @@
     </section>
   </main>
 
-  
   <footer id="footer" aria-label="Footer">
     <div class="footer-grid">
       <div class="footer-col">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
           <div class="nav-logo-orb"></div>
-          <span style="font-family:var(--sans);font-size:16px;font-weight:600;color:white;">CodeSentry</span>
+          <span style="font-family:var(--sans);font-size:16px;font-weight:600;color:var(--text-primary);">CodeSentry</span>
         </div>
         <p class="footer-brand-desc">AI-powered code review that catches what humans miss.</p>
         <p class="footer-copyright">&copy; 2026 CodeSentry. All rights reserved.</p>
@@ -1226,44 +1284,44 @@
   </footer>
 
   <script>
-    const navbar = document.getElementById('navbar');
-    const heroSection = document.getElementById('hero');
-    const navObserver = new IntersectionObserver(([entry]) => {
-      navbar.classList.toggle('scrolled', !entry.isIntersecting);
+    var navbar = document.getElementById('navbar');
+    var heroSection = document.getElementById('hero');
+    var navObserver = new IntersectionObserver(function(entries) {
+      navbar.classList.toggle('scrolled', !entries[0].isIntersecting);
     }, { threshold: 0.1 });
     navObserver.observe(heroSection);
 
-    const hamburgerBtn = document.getElementById('hamburger-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    hamburgerBtn.addEventListener('click', () => {
+    var hamburgerBtn = document.getElementById('hamburger-btn');
+    var mobileMenu = document.getElementById('mobile-menu');
+    hamburgerBtn.addEventListener('click', function() {
       mobileMenu.classList.toggle('open');
-      const isOpen = mobileMenu.classList.contains('open');
+      var isOpen = mobileMenu.classList.contains('open');
       hamburgerBtn.innerHTML = isOpen
         ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
         : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
     });
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
+    mobileMenu.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
         mobileMenu.classList.remove('open');
         hamburgerBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
       });
     });
 
-    const revealElements = document.querySelectorAll('.reveal, .feature-card, .step, .pricing-card');
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+    var revealElements = document.querySelectorAll('.reveal, .feature-card, .step, .pricing-card');
+    var revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
         if (entry.isIntersecting) {
-          const parent = entry.target.parentElement;
-          const siblings = Array.from(parent.children).filter(c =>
-            c.classList.contains('feature-card') || c.classList.contains('step') || c.classList.contains('pricing-card')
-          );
-          const delay = siblings.indexOf(entry.target) >= 0 ? siblings.indexOf(entry.target) * 80 : 0;
-          setTimeout(() => entry.target.classList.add('visible'), delay);
+          var parent = entry.target.parentElement;
+          var siblings = Array.from(parent.children).filter(function(c) {
+            return c.classList.contains('feature-card') || c.classList.contains('step') || c.classList.contains('pricing-card');
+          });
+          var delay = siblings.indexOf(entry.target) >= 0 ? siblings.indexOf(entry.target) * 80 : 0;
+          setTimeout(function() { entry.target.classList.add('visible'); }, delay);
           revealObserver.unobserve(entry.target);
         }
       });
     }, { threshold: 0.15 });
-    revealElements.forEach(el => revealObserver.observe(el));
+    revealElements.forEach(function(el) { revealObserver.observe(el); });
   </script>
 </body>
 

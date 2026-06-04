@@ -1,4 +1,10 @@
-import 'dotenv/config';
+import { config as loadEnv } from 'dotenv';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+loadEnv({ path: resolve(__dirname, '..', '..', '.env') });
+
 
 const config = {
   port: parseInt(process.env.PORT || '3000', 10),
@@ -6,8 +12,10 @@ const config = {
   isDev: (process.env.NODE_ENV || 'development') === 'development',
 
   github: {
-    token: process.env.GITHUB_TOKEN || '',
+    token:         process.env.GITHUB_TOKEN || '',
     webhookSecret: process.env.GITHUB_WEBHOOK_SECRET || '',
+    clientId:      process.env.GITHUB_CLIENT_ID || '',
+    clientSecret:  process.env.GITHUB_CLIENT_SECRET || '',
   },
 
   gitlab: {

@@ -12,6 +12,7 @@ import reviewsRouter from './routes/reviews.js';
 import settingsRouter from './routes/settings.js';
 import analyticsRouter from './routes/analytics.js';
 import authRouter from './routes/auth.js';
+import githubRouter from './routes/github.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -41,6 +42,7 @@ app.use('/api/reviews', reviewsRouter);
 app.use('/api/settings', settingsRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/github', githubRouter);
 
 
 app.get('/api/health', (_req, res) => {

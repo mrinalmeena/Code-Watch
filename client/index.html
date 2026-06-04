@@ -3,15 +3,1543 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="AI-powered code review assistant for GitHub and GitLab. Detects bugs, security vulnerabilities, code smells, and performance bottlenecks automatically." />
-  <title>AI Code Review Assistant</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="stylesheet" href="/src/styles/index.css" />
-  <link rel="stylesheet" href="/src/styles/auth.css" />
+  <meta name="description" content="CodeSentry Dashboard — AI-powered code review analytics, issue tracking, and live PR analysis." />
+  <title>CodeSentry — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+
+      --bg-base: #f0ede6;
+      --bg-gradient:
+        radial-gradient(ellipse 110% 80% at 0% 0%,
+          rgba(180, 210, 185, 0.55) 0%, transparent 55%),
+        radial-gradient(ellipse 90% 70% at 100% 100%,
+          rgba(210, 175, 155, 0.45) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 60% at 50% 40%,
+          rgba(170, 195, 215, 0.25) 0%, transparent 60%),
+        #ede8e0;
+
+      --surface: rgba(255, 252, 248, 0.72);
+      --surface-border: rgba(160, 150, 130, 0.18);
+      --surface-hover: rgba(255, 252, 248, 0.9);
+
+      --accent: #6c5ce7;
+      --accent-light: #a594f9;
+      --accent-grad: linear-gradient(135deg, #6c5ce7, #a594f9);
+      --accent-glow: rgba(108, 92, 231, 0.22);
+      --accent-subtle: rgba(108, 92, 231, 0.08);
+
+      --text-primary: #1a1814;
+      --text-secondary: rgba(26, 24, 20, 0.6);
+      --text-muted: rgba(26, 24, 20, 0.38);
+      --text-on-accent: #ffffff;
+
+      --input-bg: rgba(255, 255, 255, 0.6);
+      --input-border: rgba(26, 24, 20, 0.14);
+      --input-focus: rgba(108, 92, 231, 0.4);
+      --input-text: #1a1814;
+      --placeholder: rgba(26, 24, 20, 0.35);
+
+      --red: #e74c3c;
+      --red-subtle: rgba(231, 76, 60, 0.09);
+      --red-border: rgba(231, 76, 60, 0.2);
+      --amber: #e67e22;
+      --amber-subtle: rgba(230, 126, 34, 0.09);
+      --amber-border: rgba(230, 126, 34, 0.2);
+      --yellow: #d4ac0d;
+      --yellow-subtle: rgba(212, 172, 13, 0.09);
+      --yellow-border: rgba(212, 172, 13, 0.2);
+      --cyan: #0abde3;
+      --cyan-subtle: rgba(10, 189, 227, 0.09);
+      --cyan-border: rgba(10, 189, 227, 0.2);
+      --green: #10ac84;
+      --green-subtle: rgba(16, 172, 132, 0.09);
+      --green-border: rgba(16, 172, 132, 0.2);
+      --purple: #6c5ce7;
+      --purple-subtle: rgba(108, 92, 231, 0.09);
+      --purple-border: rgba(108, 92, 231, 0.2);
+
+      --logo-g1: #f5cba7;
+      --logo-g2: #e6b0aa;
+      --logo-g3: #aab7b8;
+      --logo-g4: #5d6d7e;
+
+      --warning-text: #b8860b;
+      --accent-stop: rgba(108, 92, 231, 0.15);
+      --accent-stop-transparent: rgba(108, 92, 231, 0);
+
+      --card-bg: rgba(255, 252, 248, 0.65);
+      --card-border: rgba(160, 150, 130, 0.16);
+      --card-shadow: 0 4px 24px rgba(26, 24, 20, 0.07);
+
+      --sidebar-bg: rgba(245, 240, 232, 0.88);
+      --sidebar-border: rgba(160, 150, 130, 0.15);
+    }
+
+    html, body {
+      font-family: var(--sans);
+      color: var(--text-primary);
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .layout { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--sidebar-border);
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 16px;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 8px; margin-bottom: 4px;
+      text-decoration: none;
+    }
+
+    .sidebar-logo-orb {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, var(--logo-g1), var(--logo-g2), var(--logo-g3), var(--logo-g4));
+      box-shadow: 0 0 6px var(--accent-glow);
+    }
+
+    .sidebar-logo-text { font-size: 17px; font-weight: 700; color: var(--text-primary); }
+
+    .sidebar-user {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 8px; margin-bottom: 20px;
+    }
+
+    .sidebar-user-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 2px solid var(--surface-border);
+      object-fit: cover; flex-shrink: 0;
+      background: var(--accent-subtle);
+    }
+
+    .sidebar-user-info { overflow: hidden; }
+    .sidebar-user-name { font-size: 14px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar-user-handle { font-size: 12px; color: var(--text-muted); }
+
+    .sidebar-label {
+      font-size: 10px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-muted);
+      padding: 0 8px; margin-bottom: 8px;
+    }
+
+    .sidebar-nav { list-style: none; display: flex; flex-direction: column; gap: 2px; flex: 1; }
+
+    .sidebar-nav li a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px;
+      text-decoration: none; font-size: 14px;
+      color: var(--text-secondary); transition: all 0.15s ease;
+    }
+
+    .sidebar-nav li a:hover { background: rgba(108,92,231,0.06); color: var(--accent); }
+
+    .sidebar-nav li a.active {
+      background: var(--accent-subtle); color: var(--accent);
+      font-weight: 600; border-left: 3px solid var(--accent);
+    }
+
+    .sidebar-nav li a svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    .sidebar-bottom {
+      margin-top: auto; display: flex; flex-direction: column;
+      gap: 12px; padding-top: 16px;
+    }
+
+    .sidebar-status {
+      display: flex; align-items: center; gap: 8px;
+      padding: 0 8px; font-size: 12px; color: var(--text-muted);
+    }
+
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+
+    .btn-signout {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; padding: 10px; border-radius: 10px;
+      border: 1px solid var(--input-border);
+      background: rgba(26,24,20,0.05);
+      color: var(--text-secondary); font-family: var(--sans);
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      transition: all 0.2s ease; text-decoration: none;
+    }
+
+    .btn-signout:hover { background: rgba(231,76,60,0.07); border-color: rgba(231,76,60,0.2); color: var(--red); }
+    .btn-signout svg { width: 16px; height: 16px; }
+
+    .main-content { margin-left: 260px; flex: 1; padding: 32px 40px; }
+
+    .main-header { margin-bottom: 28px; }
+    .main-header h1 { font-size: 26px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .main-header p { font-size: 14px; color: var(--text-secondary); }
+
+    .stat-cards {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px; margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; box-shadow: var(--card-shadow);
+      backdrop-filter: blur(10px); padding: 24px;
+    }
+
+    .stat-card-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+    .stat-card-value { font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+    .stat-card-sub { font-size: 12px; color: var(--text-muted); }
+
+    .demo-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 20px; box-shadow: var(--card-shadow);
+      padding: 32px; margin-bottom: 24px;
+    }
+
+    .demo-card h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+
+    .demo-card-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.5; }
+
+    .demo-auth-pill {
+      background: rgba(16,172,132,0.08);
+      border: 1px solid rgba(16,172,132,0.2);
+      border-radius: 8px; padding: 10px 16px;
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .demo-auth-pill-left { display: flex; align-items: center; gap: 8px; flex: 1; }
+    .demo-auth-pill-avatar { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; }
+    .demo-auth-pill-text { font-size: 13px; color: var(--green); font-weight: 500; }
+    .demo-auth-pill-right { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+
+    .demo-api-label { font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px; }
+
+    .demo-input {
+      width: 100%; height: 46px;
+      background: var(--input-bg); border: 1px solid var(--input-border);
+      border-radius: 12px; padding: 0 16px;
+      font-family: var(--sans); font-size: 14px; color: var(--input-text);
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .demo-input::placeholder { color: var(--placeholder); }
+    .demo-input:focus { border-color: var(--input-focus); box-shadow: 0 0 0 3px rgba(108,92,231,0.12); background: rgba(255,255,255,0.85); }
+
+    .demo-row { display: flex; gap: 12px; margin-top: 0; }
+    .demo-row .demo-input { flex: 1; }
+    .demo-row .demo-input-sm { width: 130px; flex: none; }
+
+    .demo-note { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+
+    .demo-btn {
+      background: var(--accent-grad); color: white;
+      border: none; border-radius: 10px;
+      padding: 0 24px; height: 46px;
+      font-family: var(--sans); font-weight: 600; font-size: 14px;
+      cursor: pointer; white-space: nowrap;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .demo-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px var(--accent-glow); }
+    .demo-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .demo-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+    .demo-divider-line { flex: 1; height: 1px; background: rgba(26,24,20,0.1); }
+    .demo-divider-text { font-size: 11px; color: var(--text-muted); letter-spacing: 0.1em; white-space: nowrap; }
+
+    .sample-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .sample-btn {
+      background: rgba(255,255,255,0.5); border: 1px solid var(--card-border);
+      border-radius: 20px; padding: 7px 16px;
+      font-family: var(--sans); font-size: 12px; font-weight: 500;
+      color: var(--text-secondary); cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .sample-btn:hover { background: rgba(255,255,255,0.85); border-color: var(--accent); color: var(--accent); }
+
+    #demo-results { display: none; margin-top: 24px; }
+
+    .demo-spinner {
+      width: 32px; height: 32px;
+      border: 2px solid rgba(108,92,231,0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeSlideIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+    .flowchart-section {
+      padding: 40px 0;
+      margin-bottom: 24px;
+    }
+
+    .fc-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(12px);
+      padding: 36px 40px 40px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .fc-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--purple), var(--cyan), var(--green));
+      border-radius: 24px 24px 0 0;
+    }
+
+    .flowchart-heading {
+      font-size: 22px; font-weight: 700; color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .flowchart-sub {
+      font-size: 13px; color: var(--text-secondary); margin-bottom: 36px;
+    }
+
+    .fc-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fc-node {
+      width: 176px;
+      height: 196px;
+      flex-shrink: 0;
+      background: rgba(255,252,248,0.8);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 20px 16px 18px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      box-shadow: 0 2px 12px rgba(26,24,20,0.06);
+      backdrop-filter: blur(8px);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      cursor: default;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .fc-node.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .fc-node:hover {
+      transform: translateY(-4px) !important;
+      box-shadow: 0 10px 28px rgba(108,92,231,0.12);
+      border-color: rgba(108,92,231,0.3);
+    }
+
+    .fc-node-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+
+    .fc-node-icon svg { width: 22px; height: 22px; }
+
+    .fc-node-step {
+      font-family: monospace;
+      font-size: 9px;
+      color: var(--text-muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .fc-node-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .fc-node-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .fc-connector {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fc-connector svg {
+      overflow: visible;
+    }
+
+    .fc-down {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 8px 0;
+    }
+
+    .fc-diamond-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 4px 0;
+    }
+
+    .fc-diamond {
+      width: 96px; height: 96px;
+      background: var(--accent-subtle);
+      border: 2px solid rgba(108,92,231,0.3);
+      transform: rotate(45deg);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(108,92,231,0.1);
+      opacity: 0;
+      transition: opacity 0.4s ease 0.45s;
+      flex-shrink: 0;
+    }
+
+    .fc-diamond.visible { opacity: 1; }
+
+    .fc-diamond-inner {
+      transform: rotate(-45deg);
+      font-size: 11px; font-weight: 700; color: var(--accent);
+      text-align: center; line-height: 1.35;
+    }
+
+    .fc-branches {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 4px;
+    }
+
+    .fc-branch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .fc-path-label {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 10px;
+      letter-spacing: 0.08em;
+    }
+
+    .fc-path-yes {
+      background: rgba(231,76,60,0.1);
+      color: var(--red);
+      border: 1px solid rgba(231,76,60,0.25);
+    }
+
+    .fc-path-no {
+      background: rgba(16,172,132,0.1);
+      color: var(--green);
+      border: 1px solid rgba(16,172,132,0.25);
+    }
+
+    .fc-timing-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-subtle);
+      border: 1px solid rgba(108,92,231,0.2);
+      border-radius: 20px;
+      padding: 7px 18px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 32px;
+    }
+
+    .fc-footer-note {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    .chart-row {
+      display: grid; grid-template-columns: 2fr 1fr;
+      gap: 16px; margin-bottom: 24px;
+    }
+
+    .chart-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; box-shadow: var(--card-shadow); padding: 24px;
+    }
+
+    .chart-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 20px; }
+
+    .category-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; box-shadow: var(--card-shadow);
+      padding: 24px; margin-bottom: 24px;
+    }
+
+    .category-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 20px; }
+
+    .cat-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .cat-label { width: 120px; font-size: 13px; color: var(--text-secondary); flex-shrink: 0; }
+    .cat-bar-track { flex: 1; height: 8px; border-radius: 4px; background: rgba(26,24,20,0.08); overflow: hidden; }
+    .cat-bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+    .cat-count { width: 32px; text-align: right; font-size: 13px; font-weight: 600; color: var(--text-muted); }
+
+    .reviews-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; box-shadow: var(--card-shadow); padding: 24px;
+    }
+
+    .reviews-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; }
+
+    .review-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0; border-bottom: 1px solid rgba(26,24,20,0.06);
+      transition: background 0.15s;
+    }
+
+    .review-row:hover { background: rgba(108,92,231,0.04); margin: 0 -12px; padding: 12px; border-radius: 8px; }
+    .review-row:last-child { border-bottom: none; }
+    .review-info { display: flex; flex-direction: column; gap: 2px; }
+    .review-repo { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+    .review-time { font-size: 12px; color: var(--text-muted); }
+
+    .sev-badge {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; padding: 3px 10px; border-radius: 6px;
+    }
+
+    .donut-container { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .donut-center { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 12px; }
+    .donut-legend { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; width: 100%; }
+    .donut-legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
+    .donut-legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeSlideIn 0.3s ease; }
+
+    .profile-section {
+      display: flex; align-items: center; gap: 24px; margin-bottom: 32px;
+      background: var(--surface); border: 1px solid var(--surface-border);
+      border-radius: 16px; padding: 24px;
+    }
+    .profile-avatar-container {
+      position: relative; width: 100px; height: 100px; border-radius: 50%;
+      background: var(--accent-subtle); border: 2px solid var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; box-shadow: 0 4px 16px var(--accent-glow);
+    }
+    .profile-avatar-image { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .profile-avatar-placeholder { font-size: 32px; font-weight: 700; color: var(--accent); }
+    .profile-avatar-upload-btn {
+      background: var(--accent-grad); color: white; border: none;
+      padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+      cursor: pointer; box-shadow: 0 4px 12px var(--accent-glow); transition: all 0.2s;
+    }
+    .profile-avatar-upload-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px var(--accent-glow); }
+    .profile-avatar-remove-btn {
+      background: transparent; border: 1px solid var(--input-border);
+      color: var(--text-secondary); padding: 8px 16px; border-radius: 8px;
+      font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+    }
+    .profile-avatar-remove-btn:hover { background: rgba(231,76,60,0.07); color: var(--red); border-color: rgba(231,76,60,0.2); }
+
+    .filter-bar {
+      display: flex; gap: 12px; margin-bottom: 24px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 12px; padding: 12px;
+    }
+    .filter-input {
+      flex: 1; height: 38px; background: var(--input-bg);
+      border: 1px solid var(--input-border); border-radius: 8px;
+      padding: 0 12px; font-size: 13px; outline: none; color: var(--text-primary);
+    }
+    .filter-select {
+      width: 150px; height: 38px; background: var(--input-bg);
+      border: 1px solid var(--input-border); border-radius: 8px;
+      padding: 0 12px; font-size: 13px; outline: none; color: var(--text-secondary);
+    }
+
+    .repo-card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .repo-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow);
+      display: flex; flex-direction: column; justify-content: space-between;
+      gap: 16px; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .repo-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,24,20,0.08); }
+    .repo-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .repo-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+    .repo-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+    .repo-status-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .repo-meta { display: flex; gap: 16px; font-size: 12px; color: var(--text-muted); }
+
+    .toast-notification {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--surface); border: 1px solid var(--green-border);
+      border-left: 4px solid var(--green); border-radius: 10px;
+      padding: 12px 20px; box-shadow: var(--card-shadow);
+      display: none; align-items: center; gap: 10px;
+      z-index: 9999; animation: toastIn 0.3s ease;
+    }
+    @keyframes toastIn { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .toast-icon { color: var(--green); font-weight: bold; }
+    .toast-text { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+
+    @media (max-width: 1024px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
+      .stat-cards { grid-template-columns: repeat(2, 1fr); }
+      .chart-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .main-content { padding: 20px 16px; }
+      .stat-cards { grid-template-columns: 1fr; }
+      .demo-row { flex-direction: column; }
+      .demo-row .demo-input-sm { width: 100%; }
+      .flowchart-row { flex-wrap: wrap; justify-content: center; gap: 8px; }
+      .fc-arrow { display: none; }
+      .fc-row2-wrapper { flex-direction: column; align-items: center; }
+    }
+  </style>
 </head>
 <body>
-  <div id="app"></div>
-  <div class="toast-container" id="toast-container"></div>
-  <script type="module" src="/src/main.js"></script>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Sidebar navigation">
+      <a href="landing.html" class="sidebar-logo">
+        <div class="sidebar-logo-orb"></div>
+        <span class="sidebar-logo-text">CodeSentry</span>
+      </a>
+
+      <div class="sidebar-user" id="sidebar-user">
+        <img class="sidebar-user-avatar" id="sidebar-avatar" src="" alt="GitHub avatar" />
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-name">Loading...</div>
+          <div class="sidebar-user-handle" id="sidebar-handle"></div>
+        </div>
+      </div>
+
+      <div class="sidebar-label">Navigation</div>
+      <ul class="sidebar-nav">
+        <li><a href="javascript:void(0)" class="active" data-tab="dashboard" aria-label="Dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a></li>
+        <li><a href="javascript:void(0)" data-tab="reviews" aria-label="Reviews">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Reviews
+        </a></li>
+        <li><a href="javascript:void(0)" data-tab="repositories" aria-label="Repositories">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Repositories
+        </a></li>
+        <li><a href="javascript:void(0)" data-tab="settings" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </a></li>
+      </ul>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-status">
+          <div class="status-dot"></div>
+          Server connected
+        </div>
+        <button type="button" class="btn-signout" id="signout-btn" aria-label="Sign out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+
+      <div id="tab-content-dashboard" class="tab-content active">
+        <div class="main-header">
+          <h1>Dashboard</h1>
+          <p>Overview of your code review activity</p>
+        </div>
+
+        <div class="stat-cards">
+          <div class="stat-card">
+            <div class="stat-card-label">Total Reviews</div>
+            <div class="stat-card-value" id="stat-reviews" style="color:var(--accent)">14</div>
+            <div class="stat-card-sub">Queue idle</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Issues Found</div>
+            <div class="stat-card-value" id="stat-issues" style="color:var(--accent)">32</div>
+            <div class="stat-card-sub">2.3 avg per review</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Critical Issues</div>
+            <div class="stat-card-value" id="stat-critical" style="color:var(--red)">4</div>
+            <div class="stat-card-sub">Fix required</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Completed</div>
+            <div class="stat-card-value" id="stat-completed" style="color:var(--amber)">12</div>
+            <div class="stat-card-sub">All reviews resolved</div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <h2>⚡ Live AI Code Review — Free with GitHub</h2>
+          <p class="demo-card-sub">Paste a public GitHub repo + PR number, or click a sample to see CodeSentry analyze code in real time using GitHub Models (gpt-4o).</p>
+
+          <div class="demo-auth-pill" id="demo-auth-pill">
+            <div class="demo-auth-pill-left">
+              <img class="demo-auth-pill-avatar" id="demo-avatar" src="" alt="GitHub avatar" />
+              <span class="demo-auth-pill-text" id="demo-user-label">Signed in as GitHub</span>
+            </div>
+            <span class="demo-auth-pill-right">✓ Free analysis via GitHub Models</span>
+          </div>
+
+          <div class="demo-row" style="margin-top:0;align-items:flex-start;">
+            <input type="text" class="demo-input" id="demo-repo" placeholder="owner/repo (e.g. facebook/react)" aria-label="GitHub repository" style="margin-top:0;" />
+            <div style="display:flex;flex-direction:column;flex-shrink:0;">
+              <input type="text" class="demo-input demo-input-sm" id="demo-pr"
+                placeholder="e.g. 32198"
+                title="Get this from the GitHub PR URL: github.com/owner/repo/pull/NUMBER"
+                aria-label="Pull request number" />
+              <a href="https://github.com" target="_blank" rel="noopener"
+                style="font-size:11px;color:var(--accent);text-decoration:none;display:block;margin-top:4px;padding-left:2px;transition:opacity 0.15s;"
+                onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                Find PRs on GitHub →
+              </a>
+            </div>
+            <button class="demo-btn" id="demo-btn" aria-label="Analyze pull request">Analyze PR</button>
+          </div>
+
+          <p class="demo-note">Works with any public repo &middot; 150 free analyses/day with your GitHub account</p>
+
+          <div class="demo-divider">
+            <div class="demo-divider-line"></div>
+            <span class="demo-divider-text">OR TRY A SAMPLE</span>
+            <div class="demo-divider-line"></div>
+          </div>
+
+          <div class="sample-row">
+            <button class="sample-btn" id="sample-sec" aria-label="Try SQL injection sample">🔴 SQL Injection</button>
+            <button class="sample-btn" id="sample-perf" aria-label="Try N+1 query sample">🟡 N+1 Query</button>
+            <button class="sample-btn" id="sample-bug" aria-label="Try null dereference sample">🟠 Null Dereference</button>
+          </div>
+
+          <div id="demo-results"></div>
+        </div>
+
+        <div class="flowchart-section" id="how-it-works">
+          <div class="fc-card">
+            <div class="flowchart-heading">How CodeSentry Works</div>
+            <div class="flowchart-sub">From PR open to review comments in under 5 seconds</div>
+
+            <div class="fc-row">
+              <div class="fc-node" id="fc-1">
+                <div class="fc-node-icon" style="background:rgba(108,92,231,0.12);border-radius:14px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg>
+                </div>
+                <div class="fc-node-step">Step 01</div>
+                <div class="fc-node-title">PR Opened</div>
+                <div class="fc-node-sub">Developer pushes code and opens a pull request on GitHub</div>
+              </div>
+
+              <div class="fc-connector">
+                <svg width="56" height="24" viewBox="0 0 56 24">
+                  <defs><marker id="ah1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(108,92,231,0.5)"/></marker></defs>
+                  <line x1="2" y1="12" x2="48" y2="12" stroke="rgba(108,92,231,0.35)" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#ah1)"/>
+                </svg>
+              </div>
+
+              <div class="fc-node" id="fc-2">
+                <div class="fc-node-icon" style="background:rgba(10,189,227,0.12);border-radius:14px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+                <div class="fc-node-step">Step 02</div>
+                <div class="fc-node-title">Webhook Fires</div>
+                <div class="fc-node-sub">GitHub notifies CodeSentry instantly via configured webhook</div>
+              </div>
+
+              <div class="fc-connector">
+                <svg width="56" height="24" viewBox="0 0 56 24">
+                  <defs><marker id="ah2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(10,189,227,0.5)"/></marker></defs>
+                  <line x1="2" y1="12" x2="48" y2="12" stroke="rgba(10,189,227,0.35)" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#ah2)"/>
+                </svg>
+              </div>
+
+              <div class="fc-node" id="fc-3">
+                <div class="fc-node-icon" style="background:rgba(16,172,132,0.12);border-radius:14px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </div>
+                <div class="fc-node-step">Step 03</div>
+                <div class="fc-node-title">Diff Fetched</div>
+                <div class="fc-node-sub">Changed files and lines retrieved from GitHub API</div>
+              </div>
+
+              <div class="fc-connector">
+                <svg width="56" height="24" viewBox="0 0 56 24">
+                  <defs><marker id="ah3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(108,92,231,0.5)"/></marker></defs>
+                  <line x1="2" y1="12" x2="48" y2="12" stroke="rgba(108,92,231,0.35)" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#ah3)"/>
+                </svg>
+              </div>
+
+              <div class="fc-node" id="fc-4">
+                <div class="fc-node-icon" style="background:rgba(108,92,231,0.12);border-radius:14px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <div class="fc-node-step">Step 04</div>
+                <div class="fc-node-title">AI Analysis</div>
+                <div class="fc-node-sub">GitHub Models (gpt-4o) runs multi-pass review via your token</div>
+              </div>
+            </div>
+
+            <div class="fc-down">
+              <svg width="24" height="40" viewBox="0 0 24 40">
+                <defs><marker id="ahd" markerWidth="8" markerHeight="8" refX="3" refY="6" orient="auto"><path d="M0,0 L6,0 L3,7 z" fill="rgba(108,92,231,0.5)"/></marker></defs>
+                <line x1="12" y1="2" x2="12" y2="34" stroke="rgba(108,92,231,0.35)" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#ahd)"/>
+              </svg>
+            </div>
+
+            <div class="fc-diamond-wrap">
+              <div class="fc-diamond" id="fc-diamond">
+                <div class="fc-diamond-inner">Issues<br>Found?</div>
+              </div>
+            </div>
+
+            <div class="fc-down" style="margin-bottom:0;">
+              <svg width="340" height="60" viewBox="0 0 340 60" style="overflow:visible;">
+                <defs>
+                  <marker id="ahl" markerWidth="8" markerHeight="8" refX="3" refY="6" orient="auto"><path d="M0,0 L6,0 L3,7 z" fill="rgba(231,76,60,0.5)"/></marker>
+                  <marker id="ahr" markerWidth="8" markerHeight="8" refX="3" refY="6" orient="auto"><path d="M0,0 L6,0 L3,7 z" fill="rgba(16,172,132,0.5)"/></marker>
+                </defs>
+                <path d="M170,0 L170,10 L90,10 L90,54" stroke="rgba(231,76,60,0.4)" stroke-width="2" stroke-dasharray="5 3" fill="none" marker-end="url(#ahl)"/>
+                <path d="M170,0 L170,10 L250,10 L250,54" stroke="rgba(16,172,132,0.4)" stroke-width="2" stroke-dasharray="5 3" fill="none" marker-end="url(#ahr)"/>
+                <text x="112" y="8" font-family="monospace" font-size="9" font-weight="700" fill="rgba(231,76,60,0.7)" letter-spacing="0.06em">YES</text>
+                <text x="222" y="8" font-family="monospace" font-size="9" font-weight="700" fill="rgba(16,172,132,0.7)" letter-spacing="0.06em">NO</text>
+              </svg>
+            </div>
+
+            <div class="fc-branches">
+              <div class="fc-branch">
+                <div class="fc-node" id="fc-5" style="border-color:rgba(231,76,60,0.25);">
+                  <div class="fc-node-icon" style="background:rgba(231,76,60,0.1);border-radius:14px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  </div>
+                  <div class="fc-node-step">Yes path</div>
+                  <div class="fc-node-title">PR Comments Posted</div>
+                  <div class="fc-node-sub">Inline comments on exact lines with severity badge and code fix</div>
+                </div>
+              </div>
+
+              <div class="fc-branch">
+                <div class="fc-node" id="fc-6" style="border-color:rgba(16,172,132,0.25);">
+                  <div class="fc-node-icon" style="background:rgba(16,172,132,0.1);border-radius:14px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  </div>
+                  <div class="fc-node-step">No path</div>
+                  <div class="fc-node-title">PR Marked Clean</div>
+                  <div class="fc-node-sub">Approval comment posted — safe to merge with no issues</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="text-align:center;">
+              <div class="fc-timing-badge">⚡ Average end-to-end time: 3.2 seconds</div>
+              <div class="fc-footer-note">Powered by GitHub Models (gpt-4o) &middot; Free with your GitHub account &middot; No API key required</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-row">
+          <div class="chart-card">
+            <h3>Review Activity</h3>
+            <svg width="100%" height="180" viewBox="0 0 500 180" preserveAspectRatio="none">
+              <line x1="0" y1="90" x2="500" y2="90" stroke="var(--accent-glow)" stroke-width="1" stroke-dasharray="6 4"/>
+              <polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                points="0,160 50,140 100,150 150,120 200,130 250,90 300,100 350,80 400,60 450,70 500,50"/>
+              <polyline fill="url(#areaGrad)" stroke="none"
+                points="0,180 0,160 50,140 100,150 150,120 200,130 250,90 300,100 350,80 400,60 450,70 500,50 500,180"/>
+              <defs>
+                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="var(--accent-stop)"/>
+                  <stop offset="100%" stop-color="var(--accent-stop-transparent)"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="chart-card">
+            <h3>Severity Distribution</h3>
+            <div class="donut-container">
+              <svg width="140" height="140" viewBox="0 0 140 140">
+                <circle cx="70" cy="70" r="55" fill="none" stroke="rgba(26,24,20,0.06)" stroke-width="14"/>
+                <circle cx="70" cy="70" r="55" fill="none" stroke="var(--red)" stroke-width="14"
+                  stroke-dasharray="86.4 259.2" stroke-dashoffset="0" transform="rotate(-90 70 70)" stroke-linecap="round"/>
+                <circle cx="70" cy="70" r="55" fill="none" stroke="var(--amber)" stroke-width="14"
+                  stroke-dasharray="115.2 230.4" stroke-dashoffset="-86.4" transform="rotate(-90 70 70)" stroke-linecap="round"/>
+                <circle cx="70" cy="70" r="55" fill="none" stroke="var(--yellow)" stroke-width="14"
+                  stroke-dasharray="144 201.6" stroke-dashoffset="-201.6" transform="rotate(-90 70 70)" stroke-linecap="round"/>
+                <text x="70" y="68" text-anchor="middle" font-family="var(--sans)" font-size="18" font-weight="700" fill="var(--text-primary)">32</text>
+                <text x="70" y="84" text-anchor="middle" font-family="var(--sans)" font-size="10" fill="var(--text-muted)" letter-spacing="0.08em">ISSUES</text>
+              </svg>
+              <div class="donut-legend">
+                <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--red)"></div>Critical</div>
+                <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--amber)"></div>High</div>
+                <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--yellow)"></div>Medium</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="category-card">
+          <h3>Issues by Category</h3>
+          <div class="cat-row">
+            <div class="cat-label">Security</div>
+            <div class="cat-bar-track"><div class="cat-bar-fill" style="width:75%;background:var(--red)"></div></div>
+            <div class="cat-count">12</div>
+          </div>
+          <div class="cat-row">
+            <div class="cat-label">Bug</div>
+            <div class="cat-bar-track"><div class="cat-bar-fill" style="width:60%;background:var(--amber)"></div></div>
+            <div class="cat-count">9</div>
+          </div>
+          <div class="cat-row">
+            <div class="cat-label">Performance</div>
+            <div class="cat-bar-track"><div class="cat-bar-fill" style="width:45%;background:var(--yellow)"></div></div>
+            <div class="cat-count">7</div>
+          </div>
+          <div class="cat-row">
+            <div class="cat-label">Code Smell</div>
+            <div class="cat-bar-track"><div class="cat-bar-fill" style="width:35%;background:var(--cyan)"></div></div>
+            <div class="cat-count">5</div>
+          </div>
+          <div class="cat-row">
+            <div class="cat-label">Maintainability</div>
+            <div class="cat-bar-track"><div class="cat-bar-fill" style="width:25%;background:var(--green)"></div></div>
+            <div class="cat-count">4</div>
+          </div>
+          <div class="cat-row">
+            <div class="cat-label">Architecture</div>
+            <div class="cat-bar-track"><div class="cat-bar-fill" style="width:15%;background:var(--purple)"></div></div>
+            <div class="cat-count">2</div>
+          </div>
+        </div>
+
+        <div class="reviews-card">
+          <h3>Recent Reviews</h3>
+          <div class="review-row">
+            <div class="review-info">
+              <span class="review-repo">facebook/react #28491</span>
+              <span class="review-time">2 hours ago</span>
+            </div>
+            <span class="sev-badge" style="background:var(--red-subtle);color:var(--red);border:1px solid var(--red-border);text-transform:uppercase;">Critical</span>
+          </div>
+          <div class="review-row">
+            <div class="review-info">
+              <span class="review-repo">vercel/next.js #61203</span>
+              <span class="review-time">5 hours ago</span>
+            </div>
+            <span class="sev-badge" style="background:var(--amber-subtle);color:var(--amber);border:1px solid var(--amber-border);text-transform:uppercase;">High</span>
+          </div>
+          <div class="review-row">
+            <div class="review-info">
+              <span class="review-repo">tailwindlabs/tailwindcss #14820</span>
+              <span class="review-time">1 day ago</span>
+            </div>
+            <span class="sev-badge" style="background:var(--yellow-subtle);color:var(--yellow);border:1px solid var(--yellow-border);text-transform:uppercase;">Medium</span>
+          </div>
+          <div class="review-row">
+            <div class="review-info">
+              <span class="review-repo">prisma/prisma #23001</span>
+              <span class="review-time">2 days ago</span>
+            </div>
+            <span class="sev-badge" style="background:var(--cyan-subtle);color:var(--cyan);border:1px solid var(--cyan-border);text-transform:uppercase;">Low</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-content-reviews" class="tab-content">
+        <div class="main-header">
+          <h1>Reviews</h1>
+          <p>Browse and analyze historical code reviews</p>
+        </div>
+        <div class="filter-bar">
+          <input type="text" class="filter-input" id="reviews-search" placeholder="Search reviews by repository or PR description..." />
+          <select class="filter-select" id="reviews-status-filter">
+            <option value="all">All Statuses</option>
+            <option value="critical">Critical</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+            <option value="clean">Clean</option>
+          </select>
+        </div>
+        <div class="reviews-card" id="reviews-list-container"></div>
+      </div>
+
+      <div id="tab-content-repositories" class="tab-content">
+        <div class="main-header">
+          <h1>Repositories</h1>
+          <p>Manage your connected repositories and review webhooks</p>
+        </div>
+        <div class="filter-bar">
+          <input type="text" class="filter-input" id="repos-search" placeholder="Search repositories..." />
+          <button type="button" class="demo-btn" id="connect-repo-btn" style="height:38px;padding:0 20px;font-size:13px;">Connect Repository</button>
+        </div>
+        <div class="repo-card-grid" id="repos-list-container"></div>
+      </div>
+
+      <div id="tab-content-settings" class="tab-content">
+        <div class="main-header">
+          <h1>Settings</h1>
+          <p>Manage your personal profile and integration preferences</p>
+        </div>
+
+        <div class="profile-section">
+          <div class="profile-avatar-container">
+            <img id="avatar-img" class="profile-avatar-image" src="" alt="Avatar" />
+            <div id="avatar-placeholder" class="profile-avatar-placeholder">JD</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="font-weight:600;font-size:15px;color:var(--text-primary);">Profile Picture</div>
+            <div style="font-size:12px;color:var(--text-secondary);">Show a photo of yourself in reviews and summaries.</div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+              <button type="button" class="profile-avatar-upload-btn" id="upload-btn">Upload Photo</button>
+              <button type="button" class="profile-avatar-remove-btn" id="remove-avatar-btn">Remove</button>
+              <input type="file" id="avatar-input" style="display:none;" accept="image/*" />
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-card" style="margin-bottom:24px;">
+          <h3 style="margin-bottom:16px;">Personal Information</h3>
+          <div class="demo-row" style="margin-top:0;margin-bottom:16px;">
+            <div style="flex:1;">
+              <div class="demo-api-label">Full Name</div>
+              <input type="text" class="demo-input" id="profile-name" placeholder="John Doe" />
+            </div>
+            <div style="flex:1;">
+              <div class="demo-api-label">Job Title / Role</div>
+              <input type="text" class="demo-input" id="profile-role" placeholder="Senior Developer" />
+            </div>
+          </div>
+          <div class="demo-row" style="margin-top:0;margin-bottom:16px;">
+            <div style="flex:1;">
+              <div class="demo-api-label">Email Address</div>
+              <input type="email" class="demo-input" id="profile-email" placeholder="john.doe@example.com" />
+            </div>
+            <div style="flex:1;">
+              <div class="demo-api-label">GitHub Username</div>
+              <input type="text" class="demo-input" id="profile-github" placeholder="johndoe" />
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-card" style="margin-bottom:24px;">
+          <h3 style="margin-bottom:16px;">Preferences</h3>
+          <div class="demo-row" style="margin-top:0;margin-bottom:16px;">
+            <div style="flex:1;">
+              <div class="demo-api-label">Minimum Review Severity Threshold</div>
+              <select class="demo-input" id="pref-severity" style="padding:0 12px;color:var(--text-primary);appearance:none;">
+                <option value="all">All issues</option>
+                <option value="medium">Medium and above</option>
+                <option value="high">High and above</option>
+                <option value="critical">Critical only</option>
+              </select>
+            </div>
+            <div style="flex:1;">
+              <div class="demo-api-label">Integrated Theme</div>
+              <select class="demo-input" id="pref-theme" style="padding:0 12px;color:var(--text-primary);appearance:none;" disabled>
+                <option value="light">CodeSentry Premium Light (Default)</option>
+              </select>
+            </div>
+          </div>
+          <button type="button" class="demo-btn" id="save-profile-btn" style="width:180px;margin-top:8px;">Save Settings</button>
+        </div>
+      </div>
+    </main>
+
+    <div class="toast-notification" id="toast-notify">
+      <span class="toast-icon">✓</span>
+      <span class="toast-text" id="toast-msg">Settings saved successfully!</span>
+    </div>
+  </div>
+
+  <script>
+    var ghToken = sessionStorage.getItem('gh_token');
+    var ghUser  = JSON.parse(sessionStorage.getItem('gh_user') || 'null');
+
+    if (!ghToken || !ghUser) {
+      window.location.href = 'auth.html';
+    }
+
+    if (ghUser) {
+      document.getElementById('sidebar-avatar').src = ghUser.avatar_url || '';
+      document.getElementById('sidebar-name').textContent = ghUser.name || ghUser.login;
+      document.getElementById('sidebar-handle').textContent = '@' + ghUser.login;
+
+      document.getElementById('demo-avatar').src = ghUser.avatar_url || '';
+      document.getElementById('demo-user-label').textContent = 'Signed in as @' + ghUser.login;
+
+      document.getElementById('profile-name').value = ghUser.name || ghUser.login;
+      document.getElementById('profile-github').value = ghUser.login;
+      document.getElementById('avatar-img').src = ghUser.avatar_url || '';
+      if (ghUser.avatar_url) {
+        document.getElementById('avatar-img').style.display = 'block';
+        document.getElementById('avatar-placeholder').style.display = 'none';
+      }
+    }
+
+    document.getElementById('signout-btn').addEventListener('click', function() {
+      sessionStorage.removeItem('gh_token');
+      sessionStorage.removeItem('gh_user');
+      window.location.href = 'auth.html';
+    });
+
+    var SAMPLES = {
+      'sample-sec': {
+        filename: 'src/db/userRepository.js',
+        issues: [
+          {
+            title: 'SQL Injection Vulnerability',
+            severity: 'critical',
+            description: 'User input is concatenated directly into a SQL query string. An attacker can inject arbitrary SQL to read, modify, or delete all data in the database.',
+            suggestion: 'Use parameterized queries:\nconst q = "SELECT * FROM users WHERE id = ?";\nreturn await this.db.execute(q, [id]);'
+          }
+        ]
+      },
+      'sample-perf': {
+        filename: 'src/services/orderService.js',
+        issues: [
+          {
+            title: 'N+1 Query Pattern',
+            severity: 'high',
+            description: 'A separate database query is issued for every order in the result set. With 1,000 orders this executes 1,001 queries instead of 1, causing severe performance degradation.',
+            suggestion: 'Fetch all users in a single IN query:\nconst ids = orders.map(o => o.userId);\nconst users = await User.findAll({ where: { id: ids } });\nconst userMap = Object.fromEntries(users.map(u => [u.id, u]));\norders.forEach(o => { o.user = userMap[o.userId]; });'
+          }
+        ]
+      },
+      'sample-bug': {
+        filename: 'src/api/handler.js',
+        issues: [
+          {
+            title: 'Potential Null Dereference',
+            severity: 'high',
+            description: 'Accessing data.user.profile.displayName assumes all intermediate objects are non-null. If res.data, res.data.user, or res.data.user.profile is null or undefined, this throws a TypeError at runtime.',
+            suggestion: 'Use optional chaining and a fallback:\nconst name = data?.user?.profile?.displayName ?? "Anonymous";\nreturn { greeting: `Hello ${name}` };'
+          }
+        ]
+      }
+    };
+
+    var SEV_COLOUR = { critical: 'var(--red)', high: 'var(--amber)', medium: 'var(--yellow)', low: 'var(--cyan)' };
+    var SEV_SUBTLE = { critical: 'var(--red-subtle)', high: 'var(--amber-subtle)', medium: 'var(--yellow-subtle)', low: 'var(--cyan-subtle)' };
+    var SEV_BORDER = { critical: 'var(--red-border)', high: 'var(--amber-border)', medium: 'var(--yellow-border)', low: 'var(--cyan-border)' };
+
+    function showResults(html) {
+      var el = document.getElementById('demo-results');
+      el.style.display = 'block';
+      el.innerHTML = html;
+      el.style.animation = 'none';
+      el.offsetHeight;
+      el.style.animation = 'fadeSlideIn 0.35s ease';
+    }
+
+    function loadingHTML(msg) {
+      return '<div style="text-align:center;padding:32px"><div class="demo-spinner"></div><p style="margin-top:12px;font-size:13px;color:var(--text-secondary)">' + msg + '</p></div>';
+    }
+
+    function errorHTML(msg) {
+      return '<div style="background:rgba(231,76,60,0.07);border:1px solid rgba(231,76,60,0.18);border-radius:10px;padding:12px 16px;color:var(--red);font-size:13px">\u26A0 ' + msg + '</div>';
+    }
+
+    function issueCardHTML(issue) {
+      var c      = SEV_COLOUR[issue.severity] || 'var(--purple)';
+      var bg     = SEV_SUBTLE[issue.severity] || 'var(--purple-subtle)';
+      var border = SEV_BORDER[issue.severity] || 'var(--purple-border)';
+      var sug    = '';
+      if (issue.suggestion) {
+        sug = '<div style="background:var(--accent-subtle);border:1px solid rgba(108,92,231,0.15);border-radius:8px;padding:10px 12px;margin-top:8px">' +
+          '<div style="font-size:10px;color:var(--accent);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px">\uD83D\uDCA1 Suggestion</div>' +
+          '<div style="font-size:12px;color:var(--text-secondary);font-family:monospace;line-height:1.5;white-space:pre-wrap">' + issue.suggestion + '</div></div>';
+      }
+      return '<div style="background:rgba(255,252,248,0.5);border-left:3px solid ' + c + ';border-radius:0 12px 12px 0;padding:16px;margin-bottom:10px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px">' +
+        '<span style="font-size:14px;font-weight:600;color:var(--text-primary)">' + issue.title + '</span>' +
+        '<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;background:' + bg + ';color:' + c + ';border:1px solid ' + border + ';white-space:nowrap;text-transform:uppercase">' + issue.severity + '</span></div>' +
+        '<p style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:8px">' + issue.description + '</p>' +
+        sug + '</div>';
+    }
+
+    function resultsHTML(issues, source) {
+      if (!issues.length) {
+        return '<p style="color:var(--green);font-size:14px;text-align:center;padding:24px">\u2713 No issues found above severity threshold.</p>';
+      }
+      var cards = '';
+      for (var i = 0; i < issues.length; i++) cards += issueCardHTML(issues[i]);
+      return '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">' +
+        '<span style="font-size:15px;font-weight:600;color:var(--text-primary)">Review Results <span style="font-size:12px;font-weight:400;color:var(--text-muted);margin-left:8px">' + source + '</span></span>' +
+        '<span style="background:var(--accent-subtle);border:1px solid rgba(108,92,231,0.2);border-radius:20px;padding:3px 12px;font-size:12px;color:var(--accent)">' + issues.length + ' issue' + (issues.length !== 1 ? 's' : '') + '</span></div>' + cards;
+    }
+
+    function runSample(sampleId) {
+      var s = SAMPLES[sampleId];
+      showResults(loadingHTML('Analyzing sample diff...'));
+      setTimeout(function() {
+        showResults(resultsHTML(s.issues, s.filename));
+      }, 700);
+    }
+
+    async function runPRReview() {
+      var repo = document.getElementById('demo-repo').value.trim();
+      var pr   = document.getElementById('demo-pr').value.trim();
+      var btn  = document.getElementById('demo-btn');
+
+      if (!repo || !pr) {
+        showResults(errorHTML('Enter a repo (owner/repo) and PR number.'));
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Fetching diff...';
+      showResults(loadingHTML('Fetching PR from GitHub...'));
+
+      try {
+        var ghRes = await fetch(
+          'https://api.github.com/repos/' + repo + '/pulls/' + pr,
+          {
+            headers: {
+              'Accept': 'application/vnd.github.v3.diff',
+              'Authorization': 'Bearer ' + ghToken
+            }
+          }
+        );
+
+        if (!ghRes.ok) {
+          throw new Error(
+            ghRes.status === 404
+              ? 'PR #' + pr + ' not found in ' + repo + '.'
+              : 'GitHub returned ' + ghRes.status + '.'
+          );
+        }
+
+        var diff = await ghRes.text();
+        if (!diff.trim()) throw new Error('PR has no diff (empty or already merged).');
+
+        showResults(loadingHTML('Analyzing with GitHub Models AI...'));
+        btn.textContent = 'Analyzing...';
+
+        var reviewRes = await fetch('/api/github/review', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + ghToken
+          },
+          body: JSON.stringify({ diff: diff.slice(0, 4000), source: repo + ' PR #' + pr })
+        });
+
+        if (reviewRes.status === 429) {
+          var e429 = await reviewRes.json();
+          throw new Error(e429.error);
+        }
+        if (!reviewRes.ok) {
+          var eErr = await reviewRes.json().catch(function() { return {}; });
+          throw new Error(eErr.error || 'Review failed.');
+        }
+
+        var issues = await reviewRes.json();
+        showResults(resultsHTML(issues, repo + ' #' + pr));
+      } catch(err) {
+        showResults(errorHTML(err.message));
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Analyze PR';
+      }
+    }
+
+    document.getElementById('demo-btn').addEventListener('click', runPRReview);
+    document.getElementById('sample-sec').addEventListener('click', function() { runSample('sample-sec'); });
+    document.getElementById('sample-perf').addEventListener('click', function() { runSample('sample-perf'); });
+    document.getElementById('sample-bug').addEventListener('click', function() { runSample('sample-bug'); });
+
+    var REVIEWS_DATA = [
+      { repo: 'facebook/react', pr: '28491', time: '2 hours ago', severity: 'critical', desc: 'Added unified hydration module and fixed session validation vulnerability.' },
+      { repo: 'vercel/next.js', pr: '61203', time: '5 hours ago', severity: 'high', desc: 'Optimized server component bundling logic and solved resource leak in dev proxy.' },
+      { repo: 'tailwindlabs/tailwindcss', pr: '14820', time: '1 day ago', severity: 'medium', desc: 'Refactored media query generation class to improve compilation speed.' },
+      { repo: 'prisma/prisma', pr: '23001', time: '2 days ago', severity: 'low', desc: 'Fixed minor type mapping ambiguity in JSON schema serialization.' },
+      { repo: 'angular/angular', pr: '55012', time: '4 days ago', severity: 'clean', desc: 'Refactored zone.js change detection to improve component render tree performance.' }
+    ];
+
+    var REPOS_DATA = [
+      { name: 'facebook/react', reviews: 14, issues: 32, status: 'Enabled', color: 'var(--green)' },
+      { name: 'vercel/next.js', reviews: 8, issues: 19, status: 'Enabled', color: 'var(--green)' },
+      { name: 'tailwindlabs/tailwindcss', reviews: 11, issues: 15, status: 'Enabled', color: 'var(--green)' },
+      { name: 'prisma/prisma', reviews: 5, issues: 6, status: 'Enabled', color: 'var(--green)' },
+      { name: 'angular/angular', reviews: 3, issues: 0, status: 'Disabled', color: 'var(--text-muted)' }
+    ];
+
+    var sidebarLinks = document.querySelectorAll('.sidebar-nav a[data-tab]');
+    var tabContents  = document.querySelectorAll('.tab-content');
+
+    function switchTab(tabId) {
+      sidebarLinks.forEach(function(link) {
+        link.classList.toggle('active', link.getAttribute('data-tab') === tabId);
+      });
+      tabContents.forEach(function(content) {
+        if (content.id === 'tab-content-' + tabId) {
+          content.style.display = 'block';
+          content.style.animation = 'fadeSlideIn 0.3s ease';
+        } else {
+          content.style.display = 'none';
+        }
+      });
+    }
+
+    sidebarLinks.forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        switchTab(link.getAttribute('data-tab'));
+      });
+    });
+
+    function renderReviewsList() {
+      var search    = document.getElementById('reviews-search').value.toLowerCase();
+      var filter    = document.getElementById('reviews-status-filter').value;
+      var container = document.getElementById('reviews-list-container');
+
+      var filtered = REVIEWS_DATA.filter(function(r) {
+        return (r.repo.toLowerCase().indexOf(search) !== -1 || r.pr.indexOf(search) !== -1 || r.desc.toLowerCase().indexOf(search) !== -1)
+          && (filter === 'all' || r.severity === filter);
+      });
+
+      if (!filtered.length) {
+        container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:32px;">No reviews found matching the filters.</p>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(function(r) {
+        var c      = SEV_COLOUR[r.severity] || 'var(--purple)';
+        var bg     = SEV_SUBTLE[r.severity] || 'var(--purple-subtle)';
+        var border = SEV_BORDER[r.severity] || 'var(--purple-border)';
+        return '<div class="review-row" style="margin-bottom:8px;">' +
+          '<div class="review-info">' +
+          '<span class="review-repo">' + r.repo + ' #' + r.pr + '</span>' +
+          '<span class="review-time">' + r.time + '</span>' +
+          '<p style="font-size:12px;color:var(--text-secondary);margin-top:4px;line-height:1.5;">' + r.desc + '</p>' +
+          '</div>' +
+          '<span class="sev-badge" style="background:' + bg + ';color:' + c + ';border:1px solid ' + border + ';text-transform:uppercase;">' + r.severity + '</span>' +
+          '</div>';
+      }).join('');
+    }
+
+    function renderReposList() {
+      var search    = document.getElementById('repos-search').value.toLowerCase();
+      var container = document.getElementById('repos-list-container');
+
+      var filtered = REPOS_DATA.filter(function(rp) { return rp.name.toLowerCase().indexOf(search) !== -1; });
+
+      if (!filtered.length) {
+        container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:32px;grid-column:span 2;">No repositories found matching the search query.</p>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(function(rp) {
+        var isEnabled = rp.status === 'Enabled';
+        return '<div class="repo-card">' +
+          '<div class="repo-header">' +
+          '<span class="repo-title">' + rp.name + '</span>' +
+          '<div class="repo-status"><span class="repo-status-dot" style="background:' + rp.color + '"></span><span>' + rp.status + '</span></div>' +
+          '</div>' +
+          '<div class="repo-meta"><span>Total Reviews: ' + rp.reviews + '</span><span>Issues Flagged: ' + rp.issues + '</span></div>' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">' +
+          '<span style="font-size:11px;color:var(--text-muted)">Webhook Active</span>' +
+          '<button type="button" class="sample-btn" onclick="toggleRepoStatus(\'' + rp.name + '\')">' + (isEnabled ? 'Deactivate' : 'Activate') + '</button>' +
+          '</div></div>';
+      }).join('');
+    }
+
+    window.toggleRepoStatus = function(name) {
+      for (var i = 0; i < REPOS_DATA.length; i++) {
+        if (REPOS_DATA[i].name === name) {
+          REPOS_DATA[i].status = REPOS_DATA[i].status === 'Enabled' ? 'Disabled' : 'Enabled';
+          REPOS_DATA[i].color  = REPOS_DATA[i].status === 'Enabled' ? 'var(--green)' : 'var(--text-muted)';
+          break;
+        }
+      }
+      renderReposList();
+      showToast('Repository status updated!');
+    };
+
+    var profileData = {
+      name:     localStorage.getItem('profile_name') || (ghUser && ghUser.name) || 'Developer',
+      role:     localStorage.getItem('profile_role') || 'Senior Frontend Engineer',
+      email:    localStorage.getItem('profile_email') || '',
+      github:   localStorage.getItem('profile_github') || (ghUser && ghUser.login) || '',
+      severity: localStorage.getItem('profile_severity') || 'all',
+      avatar:   localStorage.getItem('profile_avatar') || (ghUser && ghUser.avatar_url) || ''
+    };
+
+    function initProfileInputs() {
+      document.getElementById('profile-name').value     = profileData.name;
+      document.getElementById('profile-role').value     = profileData.role;
+      document.getElementById('profile-email').value    = profileData.email;
+      document.getElementById('profile-github').value   = profileData.github;
+      document.getElementById('pref-severity').value    = profileData.severity;
+      updateAvatarUI();
+    }
+
+    function updateAvatarUI() {
+      var img         = document.getElementById('avatar-img');
+      var placeholder = document.getElementById('avatar-placeholder');
+
+      if (profileData.avatar) {
+        img.src = profileData.avatar;
+        img.style.display = 'block';
+        placeholder.style.display = 'none';
+      } else {
+        img.style.display = 'none';
+        placeholder.style.display = 'flex';
+        var initials = 'JD';
+        if (profileData.name) {
+          var parts = profileData.name.trim().split(/\s+/);
+          initials = parts.length >= 2
+            ? (parts[0][0] + parts[1][0]).toUpperCase()
+            : parts[0].slice(0, 2).toUpperCase();
+        }
+        placeholder.textContent = initials;
+      }
+    }
+
+    document.getElementById('upload-btn').addEventListener('click', function() {
+      document.getElementById('avatar-input').click();
+    });
+
+    document.getElementById('avatar-input').addEventListener('change', function(e) {
+      var file = e.target.files[0];
+      if (file) {
+        var reader = new FileReader();
+        reader.onload = function(evt) {
+          profileData.avatar = evt.target.result;
+          updateAvatarUI();
+          showToast('Photo uploaded successfully!');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    document.getElementById('remove-avatar-btn').addEventListener('click', function() {
+      profileData.avatar = '';
+      updateAvatarUI();
+      showToast('Photo removed!');
+    });
+
+    document.getElementById('save-profile-btn').addEventListener('click', function() {
+      var btn = document.getElementById('save-profile-btn');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      setTimeout(function() {
+        profileData.name     = document.getElementById('profile-name').value.trim();
+        profileData.role     = document.getElementById('profile-role').value.trim();
+        profileData.email    = document.getElementById('profile-email').value.trim();
+        profileData.github   = document.getElementById('profile-github').value.trim();
+        profileData.severity = document.getElementById('pref-severity').value;
+
+        localStorage.setItem('profile_name',     profileData.name);
+        localStorage.setItem('profile_role',     profileData.role);
+        localStorage.setItem('profile_email',    profileData.email);
+        localStorage.setItem('profile_github',   profileData.github);
+        localStorage.setItem('profile_severity', profileData.severity);
+        if (profileData.avatar) {
+          localStorage.setItem('profile_avatar', profileData.avatar);
+        } else {
+          localStorage.removeItem('profile_avatar');
+        }
+
+        btn.disabled    = false;
+        btn.textContent = 'Save Settings';
+        showToast('Settings saved successfully!');
+        updateAvatarUI();
+      }, 800);
+    });
+
+    function showToast(msg) {
+      var toast    = document.getElementById('toast-notify');
+      var toastMsg = document.getElementById('toast-msg');
+      toastMsg.textContent = msg;
+      toast.style.display  = 'flex';
+      setTimeout(function() { toast.style.display = 'none'; }, 3000);
+    }
+
+    document.getElementById('reviews-search').addEventListener('input', renderReviewsList);
+    document.getElementById('reviews-status-filter').addEventListener('change', renderReviewsList);
+    document.getElementById('repos-search').addEventListener('input', renderReposList);
+
+    document.getElementById('connect-repo-btn').addEventListener('click', function() {
+      var name = prompt('Enter a GitHub repository name (e.g. owner/repo):');
+      if (name && name.trim()) {
+        REPOS_DATA.unshift({ name: name.trim(), reviews: 0, issues: 0, status: 'Enabled', color: 'var(--green)' });
+        renderReposList();
+        showToast('Repository connected successfully!');
+      }
+    });
+
+    renderReviewsList();
+    renderReposList();
+    initProfileInputs();
+
+    var fcNodes = document.querySelectorAll('.fc-node');
+    var fcDiamond = document.getElementById('fc-diamond');
+
+    var fcObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var nodes = document.querySelectorAll('.fc-node');
+          nodes.forEach(function(node, idx) {
+            setTimeout(function() { node.classList.add('visible'); }, idx * 80);
+          });
+          fcDiamond.classList.add('visible');
+          fcObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.2 });
+
+    var fcSection = document.getElementById('how-it-works');
+    if (fcSection) fcObserver.observe(fcSection);
+  </script>
 </body>
 </html>

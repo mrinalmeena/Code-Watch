@@ -1,3 +1,9 @@
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Node](https://img.shields.io/badge/node-%3E%3D18-green)
+![Model](https://img.shields.io/badge/AI-GitHub%20Models%20GPT--4o-purple)
+![Free](https://img.shields.io/badge/cost-free%20for%20users-brightgreen)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
+
 # AI Code Review Assistant
 
 A premium automated AI code review platform that provides real-time checks on security, performance, code quality, and readability.

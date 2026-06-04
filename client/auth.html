@@ -7,37 +7,78 @@
   <title>CodeSentry — Sign In</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
     :root {
       --serif: 'Playfair Display', Georgia, serif;
       --sans: 'DM Sans', system-ui, -apple-system, sans-serif;
-      --mono: 'DM Mono', monospace;
 
-      --bg-base: #080e0b;
+      --bg-base: #f0ede6;
       --bg-gradient:
-        radial-gradient(ellipse 90% 70% at 10% 15%, rgba(110,170,130,0.13) 0%, transparent 55%),
-        radial-gradient(ellipse 70% 60% at 90% 85%, rgba(195,155,125,0.11) 0%, transparent 50%),
-        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(90,150,170,0.07) 0%, transparent 55%),
-        #080e0b;
+        radial-gradient(ellipse 110% 80% at 0% 0%,
+          rgba(180, 210, 185, 0.55) 0%, transparent 55%),
+        radial-gradient(ellipse 90% 70% at 100% 100%,
+          rgba(210, 175, 155, 0.45) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 60% at 50% 40%,
+          rgba(170, 195, 215, 0.25) 0%, transparent 60%),
+        #ede8e0;
 
-      --surface: rgba(14, 24, 18, 0.82);
-      --surface-border: rgba(160, 210, 180, 0.1);
-      --accent: #a594f9;
-      --accent-dark: #7c6fcd;
-      --accent-grad: linear-gradient(135deg, #7c6fcd, #a594f9);
-      --accent-glow: rgba(124, 111, 205, 0.35);
-      --text-primary: #f0ede8;
-      --text-secondary: rgba(240, 237, 232, 0.55);
-      --text-muted: rgba(240, 237, 232, 0.32);
-      --input-bg: rgba(255, 255, 255, 0.04);
-      --input-border: rgba(255, 255, 255, 0.09);
-      --input-focus: rgba(162, 148, 249, 0.45);
-      --card-bg: rgba(14, 24, 18, 0.75);
-      --card-border: rgba(160, 210, 180, 0.1);
-      --stat-green: #1dd1a1;
+      --surface: rgba(255, 252, 248, 0.72);
+      --surface-border: rgba(160, 150, 130, 0.18);
+      --surface-hover: rgba(255, 252, 248, 0.9);
+
+      --accent: #6c5ce7;
+      --accent-light: #a594f9;
+      --accent-grad: linear-gradient(135deg, #6c5ce7, #a594f9);
+      --accent-glow: rgba(108, 92, 231, 0.22);
+      --accent-subtle: rgba(108, 92, 231, 0.08);
+
+      --text-primary: #1a1814;
+      --text-secondary: rgba(26, 24, 20, 0.6);
+      --text-muted: rgba(26, 24, 20, 0.38);
+      --text-on-accent: #ffffff;
+
+      --input-bg: rgba(255, 255, 255, 0.6);
+      --input-border: rgba(26, 24, 20, 0.14);
+      --input-focus: rgba(108, 92, 231, 0.4);
+      --input-text: #1a1814;
+      --placeholder: rgba(26, 24, 20, 0.35);
+
+      --red: #e74c3c;
+      --red-subtle: rgba(231, 76, 60, 0.09);
+      --red-border: rgba(231, 76, 60, 0.2);
+      --amber: #e67e22;
+      --amber-subtle: rgba(230, 126, 34, 0.09);
+      --amber-border: rgba(230, 126, 34, 0.2);
+      --yellow: #d4ac0d;
+      --yellow-subtle: rgba(212, 172, 13, 0.09);
+      --yellow-border: rgba(212, 172, 13, 0.2);
+      --cyan: #0abde3;
+      --cyan-subtle: rgba(10, 189, 227, 0.09);
+      --cyan-border: rgba(10, 189, 227, 0.2);
+      --green: #10ac84;
+      --green-subtle: rgba(16, 172, 132, 0.09);
+      --green-border: rgba(16, 172, 132, 0.2);
+      --purple: #6c5ce7;
+      --purple-subtle: rgba(108, 92, 231, 0.09);
+      --purple-border: rgba(108, 92, 231, 0.2);
+
+      --blue: #3498db;
+      --pink: #e84393;
+
+      --logo-g1: #f5cba7;
+      --logo-g2: #e6b0aa;
+      --logo-g3: #aab7b8;
+      --logo-g4: #5d6d7e;
+
+      --card-bg: rgba(255, 252, 248, 0.65);
+      --card-border: rgba(160, 150, 130, 0.16);
+      --card-shadow: 0 4px 24px rgba(26, 24, 20, 0.07);
+
+      --sidebar-bg: rgba(245, 240, 232, 0.88);
+      --sidebar-border: rgba(160, 150, 130, 0.15);
     }
 
     html { scroll-behavior: smooth; }
@@ -53,13 +94,13 @@
 
     .auth-page { display: flex; min-height: 100vh; }
 
-    
     .auth-left {
       width: 40%;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 60px 48px;
+      background: transparent;
     }
 
     .auth-left-inner { max-width: 360px; }
@@ -73,9 +114,8 @@
 
     .brand-orb {
       width: 28px; height: 28px; border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%,
-        rgba(200,220,200,0.9), rgba(160,180,200,0.7), rgba(130,150,180,0.5));
-      box-shadow: 0 0 20px rgba(160,200,180,0.3);
+      background: radial-gradient(circle at 35% 35%, var(--logo-g1), var(--logo-g2), var(--logo-g3), var(--logo-g4));
+      box-shadow: 0 0 20px var(--accent-glow);
       flex-shrink: 0;
     }
 
@@ -101,18 +141,19 @@
 
     .auth-feat-icon {
       width: 36px; height: 36px; border-radius: 10px;
-      background: rgba(162,148,249,0.1);
+      background: var(--accent-subtle);
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
 
     .auth-feat-icon svg { width: 18px; height: 18px; color: var(--accent); }
     .auth-feat h4 { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
-    .auth-feat p { font-size: 12px; color: rgba(240,237,232,0.45); line-height: 1.5; }
+    .auth-feat p { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
 
     .auth-stats {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
       border-radius: 16px;
       padding: 20px 28px;
       display: flex; justify-content: space-between; gap: 16px;
@@ -120,9 +161,8 @@
 
     .auth-stat { text-align: center; flex: 1; }
     .auth-stat-val { font-size: 22px; font-weight: 700; color: var(--accent); line-height: 1; margin-bottom: 4px; }
-    .auth-stat-lbl { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase; }
+    .auth-stat-lbl { font-size: 10px; color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase; }
 
-    
     .auth-right {
       width: 60%;
       display: flex; align-items: center; justify-content: center;
@@ -130,22 +170,49 @@
     }
 
     .auth-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid var(--card-border);
+      background: var(--surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--surface-border);
       border-radius: 24px;
       padding: 40px 44px;
       max-width: 440px; width: 100%;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.04);
+      box-shadow: 0 8px 40px rgba(26,24,20,0.1),
+                  inset 0 1px 0 rgba(255,255,255,0.6);
     }
 
-    
+    .github-signin-btn {
+      width: 100%; height: 52px; border-radius: 14px;
+      background: #1a1814;
+      color: white; font-family: var(--sans); font-size: 15px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; cursor: pointer; border: none;
+      box-shadow: 0 4px 16px rgba(26,24,20,0.2);
+      transition: all 0.2s ease;
+    }
+
+    .github-signin-btn:hover {
+      background: #2d2926;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(26,24,20,0.25);
+    }
+
+    .github-signin-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    .github-signin-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 8px;
+      margin-bottom: 0;
+    }
+
     .tab-container {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(26,24,20,0.06);
+      border: 1px solid rgba(26,24,20,0.08);
       border-radius: 14px; padding: 4px;
       display: flex; margin-bottom: 32px;
+      margin-top: 0;
     }
 
     .tab-btn {
@@ -163,130 +230,121 @@
     }
 
     .auth-heading { font-size: 26px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
-    .auth-subheading { font-size: 13px; color: rgba(240,237,232,0.45); margin-bottom: 28px; }
+    .auth-subheading { font-size: 13px; color: var(--text-secondary); margin-bottom: 28px; }
 
-    
     .error-banner {
       display: none; align-items: flex-start; gap: 10px;
-      background: rgba(239,68,68,0.12);
-      border: 1px solid rgba(239,68,68,0.3);
-      border-left: 3px solid #ef4444;
+      background: rgba(231,76,60,0.08);
+      border: 1px solid rgba(231,76,60,0.2);
+      border-left: 3px solid var(--red);
       border-radius: 10px; padding: 10px 16px;
       margin-bottom: 20px; position: relative;
       animation: bannerIn 0.3s ease;
     }
     .error-banner.show { display: flex; }
     @keyframes bannerIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
-    .error-banner-icon { color: #ef4444; font-size: 14px; flex-shrink: 0; margin-top: 1px; }
-    .error-banner-text { font-size: 13px; color: #fca5a5; line-height: 1.4; flex: 1; }
-    .error-banner-close { background: none; border: none; color: rgba(252,165,165,0.5); cursor: pointer; font-size: 16px; line-height: 1; padding: 0; flex-shrink: 0; }
-    .error-banner-close:hover { color: #fca5a5; }
+    .error-banner-icon { color: var(--red); font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .error-banner-text { font-size: 13px; color: var(--red); line-height: 1.4; flex: 1; }
+    .error-banner-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; line-height: 1; padding: 0; flex-shrink: 0; }
+    .error-banner-close:hover { color: var(--red); }
 
-    
     .form-group { margin-bottom: 18px; }
     .form-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-    .form-label { font-size: 13px; font-weight: 500; color: rgba(240,237,232,0.7); }
+    .form-label { font-size: 13px; font-weight: 500; color: var(--text-primary); }
     .forgot-link { font-size: 13px; color: var(--accent); text-decoration: none; background: none; border: none; cursor: pointer; font-family: var(--sans); transition: opacity 0.2s; }
-    .forgot-link:hover { opacity: 0.8; }
+    .forgot-link:hover { opacity: 0.8; text-decoration: underline; }
     .input-wrapper { position: relative; }
-    .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: rgba(240,237,232,0.3); pointer-events: none; }
+    .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: rgba(26,24,20,0.3); pointer-events: none; }
     .form-input {
       width: 100%; height: 50px;
       background: var(--input-bg);
       border: 1px solid var(--input-border);
       border-radius: 12px;
       padding: 0 16px 0 44px;
-      font-family: var(--sans); font-size: 14px; color: var(--text-primary);
-      outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: var(--sans); font-size: 14px; color: var(--input-text);
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
     }
-    .form-input::placeholder { color: rgba(240,237,232,0.25); }
-    .form-input:focus { border-color: var(--input-focus); box-shadow: 0 0 0 3px rgba(162,148,249,0.12); }
-    .form-input.has-error { border-color: rgba(239,68,68,0.5); }
+    .form-input::placeholder { color: var(--placeholder); }
+    .form-input:focus { border-color: var(--input-focus); box-shadow: 0 0 0 3px rgba(108,92,231,0.12); background: rgba(255,255,255,0.85); }
+    .form-input.has-error { border-color: rgba(231,76,60,0.5); }
 
     .eye-btn {
       position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
       background: none; border: none; cursor: pointer;
-      color: rgba(240,237,232,0.3); transition: color 0.2s, transform 0.15s;
+      color: rgba(26,24,20,0.3); transition: color 0.2s, transform 0.15s;
       padding: 0; display: flex; align-items: center;
     }
-    .eye-btn:hover { color: rgba(240,237,232,0.6); }
+    .eye-btn:hover { color: rgba(26,24,20,0.6); }
     .eye-btn svg { width: 18px; height: 18px; }
 
-    .field-error { font-size: 12px; color: #ef4444; margin-top: 4px; display: none; }
+    .field-error { font-size: 12px; color: var(--red); margin-top: 4px; display: none; }
     .field-error.show { display: block; }
 
-    
     .strength-meter { display: none; margin-top: 8px; }
     .strength-meter.show { display: block; }
     .strength-bars { display: flex; gap: 4px; margin-bottom: 4px; }
-    .strength-bar { flex: 1; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.1); transition: background 0.25s; }
+    .strength-bar { flex: 1; height: 4px; border-radius: 2px; background: rgba(26,24,20,0.08); transition: background 0.25s; }
     .strength-label { font-size: 11px; transition: color 0.25s; }
 
-    
     .terms-row { display: none; align-items: flex-start; gap: 8px; margin-bottom: 18px; }
     .terms-row.show { display: flex; }
     .terms-row input[type="checkbox"] { margin-top: 2px; accent-color: var(--accent); }
-    .terms-text { font-size: 12px; color: rgba(240,237,232,0.5); line-height: 1.5; }
+    .terms-text { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
     .terms-text a { color: var(--accent); text-decoration: none; }
     .terms-text a:hover { text-decoration: underline; }
 
-    
     .submit-btn {
       width: 100%; height: 50px; border: none; border-radius: 12px;
       background: var(--accent-grad);
       color: white; font-family: var(--sans); font-size: 15px; font-weight: 600;
       letter-spacing: 0.01em; cursor: pointer; margin-top: 8px;
-      box-shadow: 0 8px 24px var(--accent-glow);
+      box-shadow: 0 6px 20px var(--accent-glow);
       transition: all 0.2s ease;
       display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 12px 32px var(--accent-glow); }
+    .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 28px var(--accent-glow); }
     .submit-btn:active { transform: translateY(0) scale(0.99); }
-    .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
     .submit-btn .spinner { width: 18px; height: 18px; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .submit-btn .check-icon { width: 20px; height: 20px; display: none; }
 
-    
     .ghost-btn {
-      width: 100%; height: 50px; border-radius: 12px;
+      width: 100%; height: 46px; border-radius: 12px;
       background: transparent;
       border: 1px solid var(--input-border);
       color: var(--text-primary); font-family: var(--sans); font-size: 14px; font-weight: 500;
       cursor: pointer; transition: all 0.2s ease;
       display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .ghost-btn:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.15); }
+    .ghost-btn:hover { background: var(--surface-hover); border-color: rgba(108,92,231,0.3); }
 
-    
     .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
-    .divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
-    .divider-text { font-family: var(--sans); font-size: 11px; color: rgba(240,237,232,0.3); letter-spacing: 0.12em; white-space: nowrap; }
+    .divider-line { flex: 1; height: 1px; background: rgba(26,24,20,0.1); }
+    .divider-text { font-family: var(--sans); font-size: 11px; color: var(--text-muted); letter-spacing: 0.12em; white-space: nowrap; }
 
-    
     .social-row { display: flex; gap: 12px; }
     .social-btn {
       flex: 1; height: 46px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.55);
+      border: 1px solid var(--input-border);
       border-radius: 12px; font-family: var(--sans); font-size: 13px; font-weight: 500;
       color: var(--text-primary); cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 8px;
       transition: all 0.2s ease;
     }
-    .social-btn:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.18); transform: translateY(-1px); }
+    .social-btn:hover { background: rgba(255,255,255,0.85); border-color: rgba(108,92,231,0.3); transform: translateY(-1px); }
     .social-btn svg { width: 18px; height: 18px; }
 
-    
-    .auth-footer { text-align: center; margin-top: 24px; font-size: 13px; color: rgba(240,237,232,0.4); }
+    .auth-footer { text-align: center; margin-top: 24px; font-size: 13px; color: var(--text-secondary); }
     .auth-footer a { color: var(--accent); text-decoration: none; font-weight: 500; }
     .auth-footer a:hover { text-decoration: underline; }
 
-    
-    .forgot-view, .forgot-success-view { display: none; }
-    .forgot-view.show, .forgot-success-view.show { display: block; }
+    #view-signin { display: block; }
+    #view-forgot { display: none; }
+    #view-success { display: none; }
 
-    .forgot-heading { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .forgot-heading { font-family: var(--sans); font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
     .forgot-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; }
 
     .back-link {
@@ -298,25 +356,31 @@
     .back-link:hover { text-decoration: underline; opacity: 0.8; }
 
     .success-icon {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: rgba(29,209,161,0.15);
-      border: 1px solid rgba(29,209,161,0.3);
+      width: 56px; height: 56px; border-radius: 50%;
+      background: rgba(16,172,132,0.12);
+      border: 1px solid rgba(16,172,132,0.25);
       display: flex; align-items: center; justify-content: center;
       margin: 0 auto 16px;
     }
-    .success-icon svg { width: 24px; height: 24px; color: var(--stat-green); }
+    .success-icon svg { width: 24px; height: 24px; color: var(--green); }
 
     .success-heading { font-size: 20px; font-weight: 700; color: var(--text-primary); text-align: center; margin-bottom: 8px; }
-    .success-body { font-size: 13px; color: var(--text-secondary); text-align: center; line-height: 1.6; margin-bottom: 24px; }
+    .success-body { font-size: 13px; color: var(--text-secondary); text-align: center; line-height: 1.6; max-width: 300px; margin: 12px auto 24px; }
 
-    
-    @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    .callback-spinner {
+      width: 40px; height: 40px;
+      border: 3px solid rgba(108,92,231,0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
 
-    
+    @keyframes fadeSlideIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
     .auth-card.success { animation: cardSuccess 0.6s ease; }
-    @keyframes cardSuccess { 0% { transform: scale(1); } 30% { transform: scale(1.02); box-shadow: 0 0 40px rgba(29,209,161,0.3); } 100% { transform: scale(1); } }
+    @keyframes cardSuccess { 0% { transform: scale(1); } 30% { transform: scale(1.02); box-shadow: 0 0 40px rgba(16,172,132,0.2); } 100% { transform: scale(1); } }
 
-    
     @media (max-width: 900px) {
       .auth-page { flex-direction: column; }
       .auth-left { width: 100%; padding: 40px 24px 20px; }
@@ -337,7 +401,6 @@
 </head>
 <body>
   <div class="auth-page">
-    
     <div class="auth-left">
       <div class="auth-left-inner">
         <div class="brand-row">
@@ -365,6 +428,12 @@
             </div>
             <div><h4>Performance Insights</h4><p>Catch N+1 queries and O(n²) loops</p></div>
           </div>
+          <div class="auth-feat">
+            <div class="auth-feat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            </div>
+            <div><h4>Free via GitHub Models</h4><p>No API key — uses your GitHub account</p></div>
+          </div>
         </div>
 
         <div class="auth-stats">
@@ -375,29 +444,37 @@
       </div>
     </div>
 
-    
     <div class="auth-right">
       <div class="auth-card" id="auth-card">
-        
-        <div class="tab-container" id="tab-container">
-          <button class="tab-btn active" id="tab-signin" data-mode="signin">Sign In</button>
-          <button class="tab-btn" id="tab-signup" data-mode="signup">Sign Up</button>
+
+        <button type="button" class="github-signin-btn" id="github-signin-btn" aria-label="Continue with GitHub">
+          <svg viewBox="0 0 24 24" fill="white"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          Continue with GitHub
+        </button>
+        <p class="github-signin-note">Free AI analysis &middot; No API key needed &middot; Uses your GitHub account</p>
+
+        <div class="divider" style="margin-top:20px;">
+          <div class="divider-line"></div>
+          <span class="divider-text">OR SIGN IN WITH EMAIL</span>
+          <div class="divider-line"></div>
         </div>
 
-        
-        <div id="signin-main">
+        <div class="tab-container" id="tab-container">
+          <button class="tab-btn active" id="tab-signin" data-mode="signin" aria-label="Sign in tab">Sign In</button>
+          <button class="tab-btn" id="tab-signup" data-mode="signup" aria-label="Sign up tab">Sign Up</button>
+        </div>
+
+        <div id="view-signin">
           <h2 class="auth-heading" id="auth-heading">Welcome back</h2>
           <p class="auth-subheading" id="auth-subheading">Sign in to your account to continue</p>
 
-          
           <div class="error-banner" id="error-banner">
             <span class="error-banner-icon">⚠</span>
             <span class="error-banner-text" id="error-banner-text">Connection error. Please try again.</span>
-            <button class="error-banner-close" id="error-banner-close">&times;</button>
+            <button class="error-banner-close" id="error-banner-close" aria-label="Close error">&times;</button>
           </div>
 
-          <form id="auth-form" novalidate>
-            
+          <form id="signin-form" novalidate>
             <div class="form-group" id="name-group" style="display:none;">
               <label class="form-label" for="input-name">Full Name</label>
               <div class="input-wrapper">
@@ -407,7 +484,6 @@
               <div class="field-error" id="err-name">Please enter your name</div>
             </div>
 
-            
             <div class="form-group">
               <label class="form-label" for="input-email">Email Address</label>
               <div class="input-wrapper">
@@ -417,7 +493,6 @@
               <div class="field-error" id="err-email">Please enter a valid email</div>
             </div>
 
-            
             <div class="form-group">
               <div class="form-label-row">
                 <label class="form-label" for="input-password">Password</label>
@@ -443,50 +518,24 @@
               </div>
             </div>
 
-            
             <div class="terms-row" id="terms-row">
               <input type="checkbox" id="terms-check" />
               <span class="terms-text">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
             </div>
 
-            
-            <button type="submit" class="submit-btn" id="submit-btn">
+            <button type="submit" class="submit-btn" id="signin-btn">
               <span id="submit-text">Sign In</span>
               <svg class="spinner" id="submit-spinner" style="display:none;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4 31.4" stroke-linecap="round"/></svg>
-              <svg class="check-icon" id="submit-check" viewBox="0 0 24 24" fill="none" stroke="#1dd1a1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg class="check-icon" id="submit-check" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
           </form>
-
-          
-          <div class="divider">
-            <div class="divider-line"></div>
-            <span class="divider-text">OR CONTINUE WITH</span>
-            <div class="divider-line"></div>
-          </div>
-
-          
-          <div class="social-row">
-            <button type="button" class="social-btn" id="btn-github">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-              GitHub
-            </button>
-            <button type="button" class="social-btn" id="btn-google">
-              <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-              Google
-            </button>
-            <button type="button" class="social-btn" id="btn-gitlab">
-              <svg viewBox="0 0 24 24" fill="#FC6D26"><path d="M22.65 14.39L12 22.13 1.35 14.39a.84.84 0 0 1-.3-.94l1.22-3.78 2.44-7.51A.42.42 0 0 1 4.82 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.49h8.1l2.44-7.51A.42.42 0 0 1 18.6 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.51L23 13.45a.84.84 0 0 1-.35.94z"/></svg>
-              GitLab
-            </button>
-          </div>
 
           <p class="auth-footer" id="auth-footer">
             Don't have an account? <a href="javascript:void(0)" id="footer-switch">Sign up</a>
           </p>
         </div>
 
-        
-        <div class="forgot-view" id="forgot-form">
+        <div id="view-forgot">
           <h2 class="forgot-heading">Reset your password</h2>
           <p class="forgot-sub">Enter your email and we'll send a reset link.</p>
 
@@ -496,84 +545,147 @@
               <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               <input type="email" id="forgot-email" class="form-input" placeholder="name@example.com" />
             </div>
-            <div class="field-error" id="err-forgot-email">Please enter a valid email address</div>
+            <div class="field-error" id="forgot-error">Please enter a valid email address.</div>
           </div>
 
-          <button type="button" class="submit-btn" id="forgot-submit-btn">
-            <span id="forgot-submit-text">Send Reset Link</span>
-            <svg class="spinner" id="forgot-spinner" style="display:none;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4 31.4" stroke-linecap="round"/></svg>
-          </button>
-
-          <button type="button" class="back-link" id="forgot-back">← Back to Sign In</button>
+          <button type="button" class="submit-btn" id="forgot-submit">Send Reset Link</button>
+          <button type="button" class="back-link" id="back-to-signin-1">&larr; Back to Sign In</button>
         </div>
 
-        
-        <div class="forgot-success-view" id="forgot-success">
+        <div id="view-success" style="padding-top:20px;">
           <div class="success-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <h3 class="success-heading">Check your inbox</h3>
-          <p class="success-body" id="success-email-msg">We've sent a password reset link to your email. Check your spam folder if you don't see it.</p>
-          <button type="button" class="ghost-btn" id="success-back">Back to Sign In</button>
+          <p class="success-body">We sent a password reset link to <strong id="success-email"></strong>. If you don't see it, check your spam folder.</p>
+          <button type="button" class="ghost-btn" id="back-to-signin-2">Back to Sign In</button>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    const API = '/api';
+    var GH_CLIENT_ID = 'Ov23lib779DpShl0OFev';
 
-    
-    const tabSignin = document.getElementById('tab-signin');
-    const tabSignup = document.getElementById('tab-signup');
-    const tabContainer = document.getElementById('tab-container');
-    const heading = document.getElementById('auth-heading');
-    const subheading = document.getElementById('auth-subheading');
-    const form = document.getElementById('auth-form');
-    const nameGroup = document.getElementById('name-group');
-    const termsRow = document.getElementById('terms-row');
-    const strengthMeter = document.getElementById('strength-meter');
-    const forgotLinkEl = document.getElementById('forgot-link');
-    const submitBtn = document.getElementById('submit-btn');
-    const submitText = document.getElementById('submit-text');
-    const submitSpinner = document.getElementById('submit-spinner');
-    const submitCheck = document.getElementById('submit-check');
-    const footerSwitch = document.getElementById('footer-switch');
-    const authFooter = document.getElementById('auth-footer');
-    const errorBanner = document.getElementById('error-banner');
-    const errorBannerText = document.getElementById('error-banner-text');
-    const errorBannerClose = document.getElementById('error-banner-close');
-    const eyeBtn = document.getElementById('eye-btn');
-    const eyeOpen = document.getElementById('eye-open');
-    const eyeClosed = document.getElementById('eye-closed');
-    const passwordInput = document.getElementById('input-password');
-    const emailInput = document.getElementById('input-email');
-    const nameInput = document.getElementById('input-name');
-    const authCard = document.getElementById('auth-card');
+    var urlParams = new URLSearchParams(window.location.search);
+    var oauthCode = urlParams.get('code');
+    var authError  = urlParams.get('error');
 
-    
-    const signinMain = document.getElementById('signin-main');
-    const forgotForm = document.getElementById('forgot-form');
-    const forgotSuccess = document.getElementById('forgot-success');
-    const forgotEmailInput = document.getElementById('forgot-email');
-    const forgotSubmitBtn = document.getElementById('forgot-submit-btn');
-    const forgotSubmitText = document.getElementById('forgot-submit-text');
-    const forgotSpinner = document.getElementById('forgot-spinner');
-    const forgotBack = document.getElementById('forgot-back');
-    const successBack = document.getElementById('success-back');
-    const successEmailMsg = document.getElementById('success-email-msg');
+    if (oauthCode && authError !== 'github_auth_failed') {
+      showGitHubCallbackLoading();
+      exchangeCodeForToken(oauthCode);
+    }
 
-    let mode = 'signin';
+    if (authError === 'github_auth_failed') {
+      var banner = document.getElementById('error-banner');
+      document.getElementById('error-banner-text').textContent = 'GitHub sign-in failed. Please try again.';
+      banner.classList.add('show');
+    }
 
-    
+    function showGitHubCallbackLoading() {
+      document.getElementById('auth-card').innerHTML =
+        '<div style="text-align:center;padding:48px 24px">' +
+        '<div class="callback-spinner"></div>' +
+        '<h3 style="color:var(--text-primary);font-size:18px;font-weight:600;margin-bottom:8px">Connecting GitHub account...</h3>' +
+        '<p style="color:var(--text-secondary);font-size:13px">Setting up your CodeSentry workspace</p>' +
+        '</div>';
+    }
+
+    async function exchangeCodeForToken(code) {
+      try {
+        var res = await fetch('/api/github/callback?code=' + code);
+        if (!res.ok) throw new Error('Auth failed');
+        var data = await res.json();
+        sessionStorage.setItem('gh_token', data.token);
+        sessionStorage.setItem('gh_user', JSON.stringify(data.user));
+        window.location.href = 'index.html';
+      } catch(e) {
+        window.location.href = 'auth.html?error=github_auth_failed';
+      }
+    }
+
+    document.getElementById('github-signin-btn').addEventListener('click', function() {
+      var ghScope = encodeURIComponent('read:user repo');
+      window.location.href =
+        'https://github.com/login/oauth/authorize' +
+        '?client_id=' + GH_CLIENT_ID +
+        '&scope=' + ghScope;
+    });
+
+    var mode = 'signin';
+
+    var tabSignin      = document.getElementById('tab-signin');
+    var tabSignup      = document.getElementById('tab-signup');
+    var tabContainer   = document.getElementById('tab-container');
+    var heading        = document.getElementById('auth-heading');
+    var subheading     = document.getElementById('auth-subheading');
+    var form           = document.getElementById('signin-form');
+    var nameGroup      = document.getElementById('name-group');
+    var termsRow       = document.getElementById('terms-row');
+    var strengthMeter  = document.getElementById('strength-meter');
+    var forgotLinkEl   = document.getElementById('forgot-link');
+    var submitBtn      = document.getElementById('signin-btn');
+    var submitText     = document.getElementById('submit-text');
+    var submitSpinner  = document.getElementById('submit-spinner');
+    var submitCheck    = document.getElementById('submit-check');
+    var footerSwitch   = document.getElementById('footer-switch');
+    var authFooter     = document.getElementById('auth-footer');
+    var errorBanner    = document.getElementById('error-banner');
+    var errorBannerText= document.getElementById('error-banner-text');
+    var errorBannerClose = document.getElementById('error-banner-close');
+    var eyeBtn         = document.getElementById('eye-btn');
+    var eyeOpen        = document.getElementById('eye-open');
+    var eyeClosed      = document.getElementById('eye-closed');
+    var passwordInput  = document.getElementById('input-password');
+    var emailInput     = document.getElementById('input-email');
+    var nameInput      = document.getElementById('input-name');
+    var authCard       = document.getElementById('auth-card');
+
+    function showView(name) {
+      ['signin', 'forgot', 'success'].forEach(function(v) {
+        var el = document.getElementById('view-' + v);
+        if (el) {
+          el.style.display = v === name ? 'block' : 'none';
+          if (v === name) el.style.animation = 'fadeSlideIn 0.3s ease';
+        }
+      });
+      tabContainer.style.display = name === 'signin' ? 'flex' : 'none';
+    }
+
+    function validateEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+    function showFieldError(id) { var el = document.getElementById(id); if (el) el.classList.add('show'); }
+    function clearErrors() {
+      document.querySelectorAll('.field-error').forEach(function(e) { e.classList.remove('show'); });
+      document.querySelectorAll('.form-input').forEach(function(e) { e.classList.remove('has-error'); });
+    }
+    function showBanner(msg) { errorBannerText.textContent = msg; errorBanner.classList.add('show'); }
+    function hideBanner() { errorBanner.classList.remove('show'); }
+
+    function updateStrength(pwd) {
+      var score = 0;
+      if (pwd.length >= 8) score++;
+      if (/[A-Z]/.test(pwd)) score++;
+      if (/[0-9]/.test(pwd)) score++;
+      if (/[^A-Za-z0-9]/.test(pwd)) score++;
+      var colors = ['', 'var(--red)', 'var(--amber)', 'var(--green)', 'var(--accent)'];
+      var labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+      for (var i = 1; i <= 4; i++) {
+        document.getElementById('sb-' + i).style.background = i <= score ? colors[score] : 'rgba(26,24,20,0.08)';
+      }
+      var label = document.getElementById('strength-label');
+      label.textContent = pwd.length > 0 ? (labels[score] || '') : '';
+      label.style.color = colors[score] || '';
+    }
+
     function setMode(newMode) {
       mode = newMode;
-      const isSignup = mode === 'signup';
+      var isSignup = mode === 'signup';
 
       tabSignin.classList.toggle('active', !isSignup);
       tabSignup.classList.toggle('active', isSignup);
 
-      heading.textContent = isSignup ? 'Create your account' : 'Welcome back';
+      heading.textContent    = isSignup ? 'Create your account' : 'Welcome back';
       subheading.textContent = isSignup ? 'Start reviewing code with AI today' : 'Sign in to your account to continue';
       submitText.textContent = isSignup ? 'Create Account' : 'Sign In';
 
@@ -586,216 +698,123 @@
         ? 'Already have an account? <a href="javascript:void(0)" id="footer-switch">Sign in</a>'
         : 'Don\'t have an account? <a href="javascript:void(0)" id="footer-switch">Sign up</a>';
 
-      document.getElementById('footer-switch')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        setMode(isSignup ? 'signin' : 'signup');
-      });
+      var newSwitch = document.getElementById('footer-switch');
+      if (newSwitch) {
+        newSwitch.addEventListener('click', function(e) {
+          e.preventDefault();
+          setMode(isSignup ? 'signin' : 'signup');
+        });
+      }
 
+      showView('signin');
       clearErrors();
       hideBanner();
       form.reset();
       updateStrength('');
     }
 
-    tabSignin.addEventListener('click', () => setMode('signin'));
-    tabSignup.addEventListener('click', () => setMode('signup'));
-    footerSwitch.addEventListener('click', (e) => { e.preventDefault(); setMode('signup'); });
+    tabSignin.addEventListener('click', function() { setMode('signin'); });
+    tabSignup.addEventListener('click', function() { setMode('signup'); });
+    footerSwitch.addEventListener('click', function(e) { e.preventDefault(); setMode('signup'); });
 
-    
-    function showForgotView() {
-      signinMain.style.display = 'none';
-      tabContainer.style.display = 'none';
-      forgotForm.classList.add('show');
-      forgotForm.style.animation = 'fadeUp 0.3s ease';
-      forgotSuccess.classList.remove('show');
-      document.getElementById('err-forgot-email').classList.remove('show');
-      forgotEmailInput.value = '';
-    }
+    document.getElementById('forgot-link').addEventListener('click', function(e) {
+      e.preventDefault();
+      showView('forgot');
+    });
 
-    function showSigninView() {
-      forgotForm.classList.remove('show');
-      forgotSuccess.classList.remove('show');
-      tabContainer.style.display = 'flex';
-      signinMain.style.display = 'block';
-      signinMain.style.animation = 'fadeUp 0.3s ease';
-    }
+    document.getElementById('back-to-signin-1').addEventListener('click', function() { showView('signin'); });
+    document.getElementById('back-to-signin-2').addEventListener('click', function() { showView('signin'); });
 
-    function showForgotSuccess(email) {
-      forgotForm.classList.remove('show');
-      forgotSuccess.classList.add('show');
-      forgotSuccess.style.animation = 'fadeUp 0.3s ease';
-      successEmailMsg.textContent = `We've sent a password reset link to ${email}. Check your spam folder if you don't see it.`;
-    }
+    document.getElementById('forgot-submit').addEventListener('click', function() {
+      var email = document.getElementById('forgot-email').value.trim();
+      var err   = document.getElementById('forgot-error');
+      var btn   = document.getElementById('forgot-submit');
+      var emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    forgotLinkEl.addEventListener('click', (e) => { e.preventDefault(); showForgotView(); });
-    forgotBack.addEventListener('click', showSigninView);
-    successBack.addEventListener('click', showSigninView);
-
-    forgotSubmitBtn.addEventListener('click', async () => {
-      const email = forgotEmailInput.value.trim();
-      const errEl = document.getElementById('err-forgot-email');
-
-      if (!email || !validateEmail(email)) {
-        errEl.classList.add('show');
-        forgotEmailInput.classList.add('has-error');
+      if (!emailReg.test(email)) {
+        err.textContent = 'Please enter a valid email address.';
+        err.style.display = 'block';
         return;
       }
+      err.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
 
-      errEl.classList.remove('show');
-      forgotEmailInput.classList.remove('has-error');
-
-      
-      forgotSubmitBtn.disabled = true;
-      forgotSubmitText.style.display = 'none';
-      forgotSpinner.style.display = 'block';
-
-      try {
-        await fetch(`${API}/auth/forgot-password`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email }),
-        });
-      } catch (e) {
-        
-      }
-
-      setTimeout(() => {
-        forgotSubmitBtn.disabled = false;
-        forgotSubmitText.style.display = 'inline';
-        forgotSpinner.style.display = 'none';
-        showForgotSuccess(email);
-      }, 1200);
+      setTimeout(function() {
+        document.getElementById('success-email').textContent = email;
+        showView('success');
+        btn.disabled = false;
+        btn.textContent = 'Send Reset Link';
+        document.getElementById('forgot-email').value = '';
+      }, 1400);
     });
 
-    forgotEmailInput.addEventListener('keydown', () => {
-      document.getElementById('err-forgot-email').classList.remove('show');
-      forgotEmailInput.classList.remove('has-error');
+    document.getElementById('forgot-email').addEventListener('keydown', function() {
+      document.getElementById('forgot-error').style.display = 'none';
     });
 
-    
-    eyeBtn.addEventListener('click', () => {
-      const isPwd = passwordInput.type === 'password';
+    eyeBtn.addEventListener('click', function() {
+      var isPwd = passwordInput.type === 'password';
       passwordInput.type = isPwd ? 'text' : 'password';
-      eyeOpen.style.display = isPwd ? 'none' : 'block';
+      eyeOpen.style.display  = isPwd ? 'none' : 'block';
       eyeClosed.style.display = isPwd ? 'block' : 'none';
-      eyeBtn.style.transform = `translateY(-50%) rotate(${isPwd ? 10 : 0}deg)`;
-      setTimeout(() => { eyeBtn.style.transform = 'translateY(-50%)'; }, 150);
     });
 
-    
-    passwordInput.addEventListener('input', () => {
+    passwordInput.addEventListener('input', function() {
       if (mode === 'signup') updateStrength(passwordInput.value);
     });
 
-    function updateStrength(pwd) {
-      let score = 0;
-      if (pwd.length >= 8) score++;
-      if (/[A-Z]/.test(pwd)) score++;
-      if (/[0-9]/.test(pwd)) score++;
-      if (/[^A-Za-z0-9]/.test(pwd)) score++;
-      const colors = ['', '#ef4444', '#f59e0b', '#10b981', '#a594f9'];
-      const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
-      for (let i = 1; i <= 4; i++) {
-        document.getElementById(`sb-${i}`).style.background = i <= score ? colors[score] : 'rgba(255,255,255,0.1)';
-      }
-      const label = document.getElementById('strength-label');
-      label.textContent = pwd.length > 0 ? labels[score] || '' : '';
-      label.style.color = colors[score] || '';
-    }
+    errorBannerClose.addEventListener('click', function() { hideBanner(); });
 
-    
-    function showBanner(msg) { errorBannerText.textContent = msg; errorBanner.classList.add('show'); }
-    function hideBanner() { errorBanner.classList.remove('show'); }
-    errorBannerClose.addEventListener('click', () => {
-      errorBanner.style.opacity = '0'; errorBanner.style.transform = 'translateY(-6px)';
-      setTimeout(() => { hideBanner(); errorBanner.style.opacity = ''; errorBanner.style.transform = ''; }, 200);
-    });
-
-    
-    function showFieldError(id) { document.getElementById(id)?.classList.add('show'); }
-    function clearErrors() {
-      document.querySelectorAll('.field-error').forEach(e => e.classList.remove('show'));
-      document.querySelectorAll('.form-input').forEach(e => e.classList.remove('has-error'));
-    }
-    document.querySelectorAll('#auth-form .form-input').forEach(input => {
-      input.addEventListener('keydown', () => {
-        input.closest('.form-group')?.querySelector('.field-error')?.classList.remove('show');
+    document.querySelectorAll('#signin-form .form-input').forEach(function(input) {
+      input.addEventListener('keydown', function() {
+        var g = input.closest('.form-group');
+        if (g) { var fe = g.querySelector('.field-error'); if (fe) fe.classList.remove('show'); }
         input.classList.remove('has-error');
       });
     });
-    function validateEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
 
-    
-    function setLoading(loading) {
-      submitBtn.disabled = loading;
-      submitText.style.display = loading ? 'none' : 'inline';
-      submitSpinner.style.display = loading ? 'block' : 'none';
-    }
+    document.querySelectorAll('.form-input').forEach(function(input) {
+      input.addEventListener('focus', function() {
+        var wrapper = input.closest('.input-wrapper');
+        if (wrapper) { var ic = wrapper.querySelector('.input-icon'); if (ic) ic.style.color = 'rgba(26,24,20,0.5)'; }
+      });
+      input.addEventListener('blur', function() {
+        var wrapper = input.closest('.input-wrapper');
+        if (wrapper) { var ic = wrapper.querySelector('.input-icon'); if (ic) ic.style.color = 'rgba(26,24,20,0.3)'; }
+      });
+    });
 
-    function showSuccess(callback) {
-      setLoading(false);
-      submitText.style.display = 'none';
-      submitCheck.style.display = 'block';
-      authCard.classList.add('success');
-      setTimeout(() => {
-        submitCheck.style.display = 'none'; submitText.style.display = 'inline';
-        authCard.classList.remove('success'); callback();
-      }, 1000);
-    }
-
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', function(e) {
       e.preventDefault();
-      clearErrors(); hideBanner();
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
-      let valid = true;
+      clearErrors();
+      hideBanner();
+      var email    = emailInput.value.trim();
+      var password = passwordInput.value;
+      var valid    = true;
+
       if (!email || !validateEmail(email)) { showFieldError('err-email'); emailInput.classList.add('has-error'); valid = false; }
       if (!password || password.length < 8) { showFieldError('err-password'); passwordInput.classList.add('has-error'); valid = false; }
       if (mode === 'signup' && !nameInput.value.trim()) { showFieldError('err-name'); nameInput.classList.add('has-error'); valid = false; }
       if (!valid) return;
 
-      setLoading(true);
-      try {
-        const endpoint = mode === 'signup' ? '/auth/register' : '/auth/login';
-        const body = mode === 'signup' ? { name: nameInput.value.trim(), email, password } : { email, password };
-        const res = await fetch(`${API}${endpoint}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-        const data = await res.json();
-        if (!res.ok) { setLoading(false); showBanner(data.error || 'Something went wrong. Please try again.'); return; }
-        localStorage.setItem('cr_authenticated', 'true');
-        localStorage.setItem('cr_user', JSON.stringify(data.user));
-        showSuccess(() => { window.location.href = 'index.html#/'; });
-      } catch (err) { setLoading(false); showBanner('Connection error. Please try again.'); }
-    });
+      submitBtn.disabled = true;
+      submitText.style.display = 'none';
+      submitSpinner.style.display = 'block';
 
-    
-    document.querySelectorAll('.social-btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const provider = btn.id.replace('btn-', '');
-        const demoEmail = `user@${provider}.demo`;
-        const demoName = `${provider.charAt(0).toUpperCase() + provider.slice(1)} User`;
-        hideBanner();
-        try {
-          const res = await fetch(`${API}/auth/social`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ provider, email: demoEmail, name: demoName }) });
-          const data = await res.json();
-          if (res.ok) {
-            localStorage.setItem('cr_authenticated', 'true');
-            localStorage.setItem('cr_user', JSON.stringify(data.user));
-            showSuccess(() => { window.location.href = 'index.html#/'; });
-          } else { showBanner(data.error || 'Social login failed.'); }
-        } catch (err) { showBanner('Connection error. Please try again.'); }
-      });
-    });
-
-    
-    document.querySelectorAll('.form-input').forEach(input => {
-      input.addEventListener('focus', () => {
-        const icon = input.closest('.input-wrapper')?.querySelector('.input-icon');
-        if (icon) icon.style.color = 'rgba(240,237,232,0.5)';
-      });
-      input.addEventListener('blur', () => {
-        const icon = input.closest('.input-wrapper')?.querySelector('.input-icon');
-        if (icon) icon.style.color = 'rgba(240,237,232,0.3)';
-      });
+      setTimeout(function() {
+        submitSpinner.style.display = 'none';
+        submitCheck.style.display  = 'block';
+        submitText.style.display   = 'none';
+        authCard.classList.add('success');
+        setTimeout(function() {
+          submitCheck.style.display = 'none';
+          submitText.style.display  = 'inline';
+          submitBtn.disabled        = false;
+          authCard.classList.remove('success');
+          window.location.href = 'index.html';
+        }, 1000);
+      }, 1200);
     });
   </script>
 </body>
