@@ -34,7 +34,7 @@ app.use(express.json());
 app.use(cors({
   origin: config.isDev
     ? ['http://localhost:5173', 'http://localhost:5174']
-    : false,
+    : 'https://code-watch.onrender.com',
 }));
 
 

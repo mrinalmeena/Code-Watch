@@ -1,19 +1,17 @@
 services:
-  # ── Node / Express API ──────────────────────────────────────────────────────
+  # Single Web Service — Node server builds Vite client and serves everything
   - type: web
-    name: code-watch-server
+    name: code-watch
     runtime: node
-    rootDir: server
-    buildCommand: npm install
-    startCommand: npm start
+    rootDir: .
+    buildCommand: npm install && npm run build
+    startCommand: npm start -w server
     plan: free
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000            # Render injects $PORT automatically; this is just a fallback
       - key: GITHUB_CLIENT_ID
-        sync: false             # fill in the Render dashboard
+        sync: false
       - key: GITHUB_CLIENT_SECRET
         sync: false
       - key: GITHUB_TOKEN
@@ -30,20 +28,3 @@ services:
         sync: false
       - key: GEMINI_MODEL
         value: gemini-2.5-flash
-
-  # ── Vite Static Client ──────────────────────────────────────────────────────
-  - type: web
-    name: code-watch-client
-    runtime: static
-    rootDir: client
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
-    plan: free
-    headers:
-      - path: /*
-        name: Cache-Control
-        value: no-cache
-    routes:
-      - type: rewrite
-        source: /api/*
-        destination: https://code-watch-server.onrender.com/api/*  # update with your server URL
