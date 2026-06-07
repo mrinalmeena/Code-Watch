@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// startup.js - Entry point with clear error reporting for production
+// server/startup.js - Entry point with clear error reporting for production
 process.on('uncaughtException', (err) => {
   console.error('=== STARTUP CRASH ===');
   console.error('Error:', err.message);
@@ -13,8 +13,8 @@ process.on('unhandledRejection', (reason) => {
   process.exit(1);
 });
 
-// Now import the actual server
-import('./server/src/index.js').catch((err) => {
+// Import server from same directory
+import('./src/index.js').catch((err) => {
   console.error('=== FAILED TO LOAD SERVER ===');
   console.error('Error:', err.message);
   console.error('Stack:', err.stack);
