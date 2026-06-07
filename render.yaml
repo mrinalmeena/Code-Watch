@@ -3,12 +3,7 @@ services:
     name: code-watch
     runtime: node
     rootDir: .
-    buildCommand: >
-      npm install --include=dev &&
-      npm install -w server --include=dev &&
-      npm install -w client --include=dev &&
-      npm run build -w client &&
-      cd server && npm rebuild better-sqlite3
+    buildCommand: npm install && npm run build
     startCommand: node server/src/index.js
     plan: free
     envVars:
