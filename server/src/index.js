@@ -67,7 +67,7 @@ if (!config.isDev) {
   ];
   const clientDist = candidates.find(existsSync) || candidates[0];
   app.use(express.static(clientDist));
-  app.get('*', (_req, res) => {
+  app.get(/(.*)/, (_req, res) => {
     res.sendFile(join(clientDist, 'index.html'));
   });
 }
