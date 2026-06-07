@@ -3,7 +3,7 @@ services:
     name: code-watch
     runtime: node
     rootDir: server
-    buildCommand: cd .. && npm install && npm run build
+    buildCommand: cd .. && npm install --include=dev && npm run build
     startCommand: node startup.js
     plan: free
     envVars:
