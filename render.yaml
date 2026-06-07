@@ -1,11 +1,15 @@
 services:
-  # Single Web Service — Node server builds Vite client and serves everything
   - type: web
     name: code-watch
     runtime: node
     rootDir: .
-    buildCommand: npm install && npm run build
-    startCommand: npm start -w server
+    buildCommand: >
+      npm install --include=dev &&
+      npm install -w server --include=dev &&
+      npm install -w client --include=dev &&
+      npm run build -w client &&
+      cd server && npm rebuild better-sqlite3
+    startCommand: node server/src/index.js
     plan: free
     envVars:
       - key: NODE_ENV

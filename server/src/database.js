@@ -5,7 +5,11 @@ import { fileURLToPath } from 'node:url';
 import logger from './utils/logger.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DB_PATH = join(__dirname, '..', 'data', 'reviews.db');
+// On Render/production the filesystem is read-only except /tmp
+const DB_PATH = process.env.DB_PATH ||
+  (process.env.NODE_ENV === 'production'
+    ? '/tmp/reviews.db'
+    : join(__dirname, '..', 'data', 'reviews.db'));
 
 
 mkdirSync(dirname(DB_PATH), { recursive: true });

@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { existsSync } from 'node:fs';
 import config from './config.js';
 import logger from './utils/logger.js';
 import db from './database.js';
@@ -59,7 +60,12 @@ app.get('/api/health', (_req, res) => {
 
 
 if (!config.isDev) {
-  const clientDist = join(__dirname, '..', '..', 'client', 'dist');
+  // Resolve client/dist relative to this file (works on Render & locally)
+  const candidates = [
+    join(__dirname, '..', '..', 'client', 'dist'),          // server/src -> server -> root/client/dist
+    join(process.cwd(), 'client', 'dist'),                   // cwd/client/dist (Render rootDir = .)
+  ];
+  const clientDist = candidates.find(existsSync) || candidates[0];
   app.use(express.static(clientDist));
   app.get('*', (_req, res) => {
     res.sendFile(join(clientDist, 'index.html'));
