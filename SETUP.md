@@ -1,11 +1,11 @@
-# CodeSentry AI — Setup Guide
+# Code-Watch AI — Setup Guide
 
 ## 1. Create a GitHub OAuth App
 
 1. Go to [github.com/settings/developers](https://github.com/settings/developers)
 2. Click **New OAuth App**
 3. Fill in:
-   - **Application name:** CodeSentry AI
+   - **Application name:** Code-Watch AI
    - **Homepage URL:** `http://localhost:5173`
    - **Authorization callback URL:** `http://localhost:5173/auth.html?callback=github`
 4. Click **Register application**
@@ -59,7 +59,7 @@ Rate limit errors are caught and displayed as friendly messages in the results a
 
 ## 6. How the flowchart works
 
-Scroll down past the demo card on the Dashboard to see the **How CodeSentry Works** visual flowchart. It animates in on scroll and shows the full lifecycle: PR opened → webhook → diff fetch → AI analysis → decision → comments or approval.
+Scroll down past the demo card on the Dashboard to see the **How Code-Watch Works** visual flowchart. It animates in on scroll and shows the full lifecycle: PR opened → webhook → diff fetch → AI analysis → decision → comments or approval.
 
 ## 7. Push to GitHub
 

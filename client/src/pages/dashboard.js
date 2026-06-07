@@ -122,7 +122,7 @@ export async function renderDashboard() {
       <div class="demo-card glass-card">
         <div class="demo-card-inner">
           <div class="demo-heading">⚡ Try a Live Review</div>
-          <div class="demo-sub">Paste any GitHub PR diff or pick a sample to see CodeSentry AI analyze it in real time.</div>
+          <div class="demo-sub">Paste any GitHub PR diff or pick a sample to see Code-Watch AI analyze it in real time.</div>
           <div class="demo-warning">⚠ Demo mode — never expose API keys in production.</div>
           <div class="demo-input-row">
             <input type="text" class="demo-input" id="demo-repo" placeholder="GitHub repo (e.g. facebook/react)" />
