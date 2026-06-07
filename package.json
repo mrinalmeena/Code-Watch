@@ -9,12 +9,12 @@
     "client"
   ],
   "scripts": {
-    "postinstall": "cd node_modules/better-sqlite3 && npx node-pre-gyp install --fallback-to-build || true",
+    "postinstall": "npm rebuild better-sqlite3 || true",
     "dev": "concurrently -n server,client -c cyan,magenta \"npm run dev -w server\" \"npm run dev -w client\"",
     "dev:server": "npm run dev -w server",
     "dev:client": "npm run dev -w client",
-    "build": "npm run build -w client",
-    "start": "npm start -w server"
+    "build": "npm run build --workspaces",
+    "start": "node startup.js"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
